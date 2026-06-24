@@ -71,8 +71,8 @@ servicofacil/
  
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/servicofacil.git
-cd servicofacil
+git clone https://github.com/Luisf66/Service_Solve.git
+cd Service_Solve
  
 # 2. Copie o arquivo de variáveis de ambiente
 cp .env.example .env
@@ -134,10 +134,12 @@ erDiagram
     uuid id PK
     string nome
     string email
+    string telefone
     string senha_hash
     enum tipo
     string cidade
     string estado
+    boolean ativo
     decimal media_avaliacao
     int total_avaliacoes
     int cancelamentos_mes
