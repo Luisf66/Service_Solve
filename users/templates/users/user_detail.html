@@ -139,22 +139,50 @@
       <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
         <i class="bi bi-telephone text-amber-500"></i>
         <h2 class="font-semibold text-zinc-700 text-sm">Telefones</h2>
+        <a href="{% url 'users:user_telephone_create' user.pk%}"
+          class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          style="margin-left: 61%;">
+          <i class="bi bi-plus-lg"></i>
+          Novo telefone
+        </a>
       </div>
       <ul class="divide-y divide-zinc-100">
         {% for tel in user.telephones.all %}
-        <li class="px-6 py-4 flex items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
-              <i class="bi bi-phone text-zinc-500" style="font-size: 13px;"></i>
+        <li class="px-6 py-4 flex items-center justify-between">
+          <!-- Esquerda -->
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+                <i class="bi bi-phone text-zinc-500" style="font-size: 13px;"></i>
+              </div>
+
+              <span class="text-sm text-zinc-700">{{ tel.number }}</span>
             </div>
-            <span class="text-sm text-zinc-700">{{ tel.number }}</span>
+
+            <!-- Botões -->
+            <div class="flex items-center gap-1">
+              <a href="{% url 'users:user_telephone_update' user.pk tel.pk %}"
+                title="Editar"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                <i class="bi bi-pencil" style="font-size:14px;"></i>
+              </a>
+
+              <a href="{% url 'users:user_telephone_delete' user.pk tel.pk %}"
+                title="Excluir"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                <i class="bi bi-trash" style="font-size:14px;"></i>
+              </a>
+            </div>
           </div>
+
+          <!-- Direita -->
           {% if tel.is_primary %}
-            <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-600 border border-amber-200 text-xs font-medium px-2 py-0.5 rounded-full">
-              <i class="bi bi-star-fill" style="font-size: 9px;"></i> Principal
-            </span>
+          <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-600 border border-amber-200 text-xs font-medium px-2 py-0.5 rounded-full">
+            <i class="bi bi-star-fill" style="font-size:9px;"></i>
+            Principal
+          </span>
           {% endif %}
-        </li>
+</li>
         {% empty %}
         <li class="px-6 py-10 text-center text-zinc-400 text-sm">
           <i class="bi bi-telephone text-3xl block mb-2"></i>

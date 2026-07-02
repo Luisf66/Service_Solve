@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Editar telefone{% else %}Novo telefone{% endif %} — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-2">
+
+  <!-- Cabeçalho -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold text-zinc-800">
+      {% if object %}Editar telefone{% else %}Novo telefone{% endif %}
+    </h1>
+    <p class="text-sm text-zinc-400 mt-0.5">
+      {% if object %}Atualize os dados do telefone abaixo{% else %}Preencha os dados para cadastrar um novo telefone{% endif %}
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl border border-zinc-200 shadow-sm max-w-md mx-auto overflow-hidden">
+
+    <!-- Topo do card -->
+    <div class="px-6 py-5 border-b border-zinc-100 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+        <i class="bi bi-telephone text-amber-600" style="font-size: 16px;"></i>
+      </div>
+      <span class="font-medium text-zinc-700 text-sm">
+        {% if object %}{{ object.number }}{% else %}Novo telefone{% endif %}
+      </span>
+    </div>
+
+    <form method="post" class="px-6 py-5 flex flex-col gap-5">
+      {% csrf_token %}
+
+      <!-- Número -->
+      <div class="flex flex-col gap-1.5">
+        <label for="{{ form.number.id_for_label }}" class="text-sm font-medium text-zinc-600">
+          Número <span class="text-amber-500">*</span>
+        </label>
+        {{ form.number }}
+        {% if form.number.errors %}
+          <p class="text-xs text-red-500 flex items-center gap-1">
+            <i class="bi bi-exclamation-circle"></i> {{ form.number.errors|join:", " }}
+          </p>
+        {% endif %}
+        <p class="text-xs text-zinc-400">Ex: (84) 99999-9999</p>
+      </div>
+
+      <!-- Usuário -->
+      <div class="flex flex-col gap-1.5">
+        <label for="{{ form.user.id_for_label }}" class="text-sm font-medium text-zinc-600">
+          Usuário <span class="text-amber-500">*</span>
+        </label>
+        {{ form.user }}
+        {% if form.user.errors %}
+          <p class="text-xs text-red-500 flex items-center gap-1">
+            <i class="bi bi-exclamation-circle"></i> {{ form.user.errors|join:", " }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- É principal -->
+      <div class="flex items-center gap-3 bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3">
+        {{ form.is_primary }}
+        <label for="{{ form.is_primary.id_for_label }}" class="text-sm font-medium text-zinc-600 cursor-pointer">
+          Definir como telefone principal
+        </label>
+      </div>
+
+      <!-- Botões -->
+      <div class="flex items-center gap-3 pt-2 border-t border-zinc-100 mt-1">
+        <button type="submit"
+          class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+          <i class="bi bi-check-lg"></i> Salvar
+        </button>
+        <a href="{% url 'users:user_telephones' user_pk %}"
+          class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+          <i class="bi bi-x-lg"></i> Cancelar
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<style>
+  input[type="text"], input[type="email"], input[type="password"],
+  input[type="number"], select, textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fafafa;
+    color: #3f3f46;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+    background: #fff;
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ address.street }} — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-2">
+
+  <!-- Cabeçalho -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold text-zinc-800">Detalhes do endereço</h1>
+    <p class="text-sm text-zinc-400 mt-0.5">Informações completas do endereço</p>
+  </div>
+
+  <div class="grid grid-cols-1 gap-5 max-w-2xl mx-auto">
+
+    <!-- Card principal -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+
+      <!-- Topo -->
+      <div class="px-6 py-5 border-b border-zinc-100 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+          <i class="bi bi-geo-alt text-amber-600 text-2xl"></i>
+        </div>
+        <div>
+          <p class="text-lg font-semibold text-zinc-800">{{ address.street }}, {{ address.number }}</p>
+          {% if address.complement %}
+            <p class="text-sm text-zinc-400">{{ address.complement }}</p>
+          {% endif %}
+        </div>
+        {% if address.is_primary %}
+          <span class="ml-auto inline-flex items-center gap-1.5 bg-amber-50 text-amber-600 border border-amber-200 text-xs font-medium px-3 py-1.5 rounded-full">
+            <i class="bi bi-star-fill" style="font-size: 10px;"></i> Principal
+          </span>
+        {% endif %}
+      </div>
+
+      <!-- Dados -->
+      <div class="divide-y divide-zinc-100">
+
+        <div class="px-6 py-4 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+            <i class="bi bi-signpost text-zinc-500" style="font-size: 13px;"></i>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-400 uppercase tracking-wide font-medium">Bairro</p>
+            <p class="text-sm text-zinc-700 mt-0.5">{{ address.neighborhood }}</p>
+          </div>
+        </div>
+
+        <div class="px-6 py-4 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+            <i class="bi bi-building text-zinc-500" style="font-size: 13px;"></i>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-400 uppercase tracking-wide font-medium">Cidade / Estado</p>
+            <p class="text-sm text-zinc-700 mt-0.5">{{ address.city }} / {{ address.state }}</p>
+          </div>
+        </div>
+
+        <div class="px-6 py-4 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+            <i class="bi bi-mailbox text-zinc-500" style="font-size: 13px;"></i>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-400 uppercase tracking-wide font-medium">CEP</p>
+            <p class="text-sm text-zinc-700 mt-0.5">{{ address.zip_code }}</p>
+          </div>
+        </div>
+
+        <div class="px-6 py-4 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+            <i class="bi bi-person text-zinc-500" style="font-size: 13px;"></i>
+          </div>
+          <div>
+            <p class="text-xs text-zinc-400 uppercase tracking-wide font-medium">Usuário</p>
+            <a href="{% url 'users:user_detail' address.user.pk %}"
+              class="text-sm text-amber-600 hover:text-amber-700 font-medium mt-0.5 inline-block transition-colors">
+              {{ address.user.username }}
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Botões -->
+    <div class="flex items-center gap-3">
+      <a href="{% url 'users:address_update' address.pk %}"
+        class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+        <i class="bi bi-pencil"></i> Editar
+      </a>
+      <a href="{% url 'users:address_list' %}"
+        class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+        <i class="bi bi-arrow-left"></i> Voltar
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
