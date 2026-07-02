@@ -143,10 +143,10 @@
       <!-- Botões -->
       <div class="flex items-center gap-3 pt-2 border-t border-zinc-100 mt-1" style="margin-left: 25%;">
         <button type="submit"
-          class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+          class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
           <i class="bi bi-check-lg"></i> Salvar
         </button>
-        <a href="{% url 'users:user_addresses' user_pk %}"
+        <a href="{% url 'users:user_detail' user_pk %}"
           class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
           <i class="bi bi-x-lg"></i> Cancelar
         </a>

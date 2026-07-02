@@ -49,7 +49,7 @@ class AddressCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('users:user_addresses', kwargs={'pk': self.kwargs['pk']})
+        return reverse('users:user_detail', kwargs={'pk': self.object.user.pk})
 
 
 class AddressUpdateView(UpdateView):
@@ -64,7 +64,7 @@ class AddressUpdateView(UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse('users:user_addresses', kwargs={'pk': self.object.user.pk})
+        return reverse('users:user_detail', kwargs={'pk': self.object.user.pk})
 
 
 class AddressDeleteView(DeleteView):
@@ -78,4 +78,4 @@ class AddressDeleteView(DeleteView):
         return context
 
     def get_success_url(self):
-        return reverse('users:user_addresses', kwargs={'pk': self.object.user.pk})
+        return reverse('users:user_detail', kwargs={'pk': self.object.user.pk})

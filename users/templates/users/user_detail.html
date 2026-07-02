@@ -78,7 +78,7 @@
         <i class="bi bi-geo-alt text-amber-500"></i>
         <h2 class="font-semibold text-zinc-700 text-sm">Endereços</h2>
         <a href="{% url 'users:user_address_create' user.pk%}"
-          class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           style="margin-left: 61%;">
           <i class="bi bi-plus-lg"></i>
           Novo endereço
@@ -126,7 +126,7 @@
           <i class="bi bi-geo-alt text-5xl"></i>
           <p class="text-sm">Nenhum endereço cadastrado.</p>
           <a href="{% url 'users:user_address_create' user.pk %}"
-            class="text-amber-500 hover:text-amber-600 text-sm font-medium transition-colors">
+            class="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors">
             Cadastrar o primeiro endereço →
           </a>
         </div>
@@ -140,7 +140,7 @@
         <i class="bi bi-telephone text-amber-500"></i>
         <h2 class="font-semibold text-zinc-700 text-sm">Telefones</h2>
         <a href="{% url 'users:user_telephone_create' user.pk%}"
-          class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           style="margin-left: 61%;">
           <i class="bi bi-plus-lg"></i>
           Novo telefone
@@ -195,7 +195,7 @@
     <!-- Botões -->
     <div class="flex items-center gap-3" style="margin-left: 35%;">
       <a href="{% url 'users:user_update' user.pk %}"
-        class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
         <i class="bi bi-pencil"></i> Editar
       </a>
       <a href="{% url 'users:user_list' %}"
