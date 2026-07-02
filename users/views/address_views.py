@@ -7,32 +7,6 @@ from users.models import Address, User
 from users.forms.user_address_form import AddressForm
 
 
-class AddressListView(ListView):
-    model = Address
-    template_name = 'addresses/address_list.html'
-    context_object_name = 'addresses'
-
-    def get_queryset(self):
-        self.user = get_object_or_404(User, pk=self.kwargs['pk'])
-        return Address.objects.filter(user=self.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user'] = self.user
-        return context
-
-
-class AddressDetailView(DetailView):
-    model = Address
-    template_name = 'addresses/address_detail.html'
-    context_object_name = 'address'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user_pk'] = self.object.user.pk
-        return context
-
-
 class AddressCreateView(CreateView):
     model = Address
     form_class = AddressForm

@@ -7,32 +7,6 @@ from users.models import Telephone, User
 from users.forms.user_telephone_form import TelephoneForm
 
 
-class TelephoneListView(ListView):
-    model = Telephone
-    template_name = 'telephones/telephone_list.html'
-    context_object_name = 'telephones'
-
-    def get_queryset(self):
-        self.user = get_object_or_404(User, pk=self.kwargs['pk'])
-        return Telephone.objects.filter(user=self.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user'] = self.user
-        return context
-
-
-class TelephoneDetailView(DetailView):
-    model = Telephone
-    template_name = 'telephones/telephone_detail.html'
-    context_object_name = 'telephone'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['user_pk'] = self.object.user.pk
-        return context
-
-
 class TelephoneCreateView(CreateView):
     model = Telephone
     form_class = TelephoneForm
