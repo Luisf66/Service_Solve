@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Editar endereço{% else %}Novo endereço{% endif %} — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-2">
+
+  <!-- Cabeçalho -->
+  <div class="mb-6" style="margin-left: 36%; margin-top: 5%;">
+    <h1 class="text-2xl font-semibold text-zinc-800" style="margin-left: 12%;">
+      {% if object %}Editar endereço{% else %}Novo endereço{% endif %}
+    </h1>
+    <p class="text-sm text-zinc-400 mt-0.5">
+      {% if object %}Atualize os dados do endereço abaixo{% else %}Preencha os dados para cadastrar um novo endereço{% endif %}
+    </p>
+  </div>
+
+  <div class="bg-white rounded-xl border border-zinc-200 shadow-sm max-w-xl mx-auto overflow-hidden">
+
+    <!-- Topo do card -->
+    <div class="px-6 py-5 border-b border-zinc-100 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+        <i class="bi bi-geo-alt text-amber-600" style="font-size: 16px;"></i>
+      </div>
+      <span class="font-medium text-zinc-700 text-sm">
+        {% if object %}{{ object.street }}, {{ object.number }}{% else %}Novo endereço{% endif %}
+      </span>
+    </div>
+
+    <form method="post" class="px-6 py-5 flex flex-col gap-5">
+      {% csrf_token %}
+
+      <!-- Rua e Número lado a lado -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="col-span-2 flex flex-col gap-1.5">
+          <label for="{{ form.street.id_for_label }}" class="text-sm font-medium text-zinc-600">
+            Rua <span class="text-amber-500">*</span>
+          </label>
+          {{ form.street }}
+          {% if form.street.errors %}
+            <p class="text-xs text-red-500 flex items-center gap-1">
+              <i class="bi bi-exclamation-circle"></i> {{ form.street.errors|join:", " }}
+            </p>
+          {% endif %}
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="{{ form.number.id_for_label }}" class="text-sm font-medium text-zinc-600">
+            Número <span class="text-amber-500">*</span>
+          </label>
+          {{ form.number }}
+          {% if form.number.errors %}
+            <p class="text-xs text-red-500 flex items-center gap-1">
+              <i class="bi bi-exclamation-circle"></i> {{ form.number.errors|join:", " }}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Complemento -->
+      <div class="flex flex-col gap-1.5">
+        <label for="{{ form.complement.id_for_label }}" class="text-sm font-medium text-zinc-600">
+          Complemento
+        </label>
+        {{ form.complement }}
+        {% if form.complement.errors %}
+          <p class="text-xs text-red-500 flex items-center gap-1">
+            <i class="bi bi-exclamation-circle"></i> {{ form.complement.errors|join:", " }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Bairro -->
+      <div class="flex flex-col gap-1.5">
+        <label for="{{ form.neighborhood.id_for_label }}" class="text-sm font-medium text-zinc-600">
+          Bairro <span class="text-amber-500">*</span>
+        </label>
+        {{ form.neighborhood }}
+        {% if form.neighborhood.errors %}
+          <p class="text-xs text-red-500 flex items-center gap-1">
+            <i class="bi bi-exclamation-circle"></i> {{ form.neighborhood.errors|join:", " }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Cidade, Estado e CEP lado a lado -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="col-span-1 flex flex-col gap-1.5">
+          <label for="{{ form.city.id_for_label }}" class="text-sm font-medium text-zinc-600">
+            Cidade <span class="text-amber-500">*</span>
+          </label>
+          {{ form.city }}
+          {% if form.city.errors %}
+            <p class="text-xs text-red-500 flex items-center gap-1">
+              <i class="bi bi-exclamation-circle"></i> {{ form.city.errors|join:", " }}
+            </p>
+          {% endif %}
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="{{ form.state.id_for_label }}" class="text-sm font-medium text-zinc-600">
+            Estado <span class="text-amber-500">*</span>
+          </label>
+          {{ form.state }}
+          {% if form.state.errors %}
+            <p class="text-xs text-red-500 flex items-center gap-1">
+              <i class="bi bi-exclamation-circle"></i> {{ form.state.errors|join:", " }}
+            </p>
+          {% endif %}
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="{{ form.zip_code.id_for_label }}" class="text-sm font-medium text-zinc-600">
+            CEP <span class="text-amber-500">*</span>
+          </label>
+          {{ form.zip_code }}
+          {% if form.zip_code.errors %}
+            <p class="text-xs text-red-500 flex items-center gap-1">
+              <i class="bi bi-exclamation-circle"></i> {{ form.zip_code.errors|join:", " }}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Usuário -->
+      <div class="flex flex-col gap-1.5">
+        <label for="{{ form.user.id_for_label }}" class="text-sm font-medium text-zinc-600">
+          Usuário <span class="text-amber-500">*</span>
+        </label>
+        {{ form.user }}
+        {% if form.user.errors %}
+          <p class="text-xs text-red-500 flex items-center gap-1">
+            <i class="bi bi-exclamation-circle"></i> {{ form.user.errors|join:", " }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- É principal -->
+      <div class="flex items-center gap-3 bg-zinc-50 border border-zinc-200 rounded-lg px-4 py-3">
+        {{ form.is_primary }}
+        <label for="{{ form.is_primary.id_for_label }}" class="text-sm font-medium text-zinc-600 cursor-pointer">
+          Definir como endereço principal
+        </label>
+      </div>
+
+      <!-- Botões -->
+      <div class="flex items-center gap-3 pt-2 border-t border-zinc-100 mt-1" style="margin-left: 25%;">
+        <button type="submit"
+          class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+          <i class="bi bi-check-lg"></i> Salvar
+        </button>
+        <a href="{% url 'users:user_addresses' user_pk %}"
+          class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+          <i class="bi bi-x-lg"></i> Cancelar
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<style>
+  input[type="text"], input[type="email"], input[type="password"],
+  input[type="number"], select, textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fafafa;
+    color: #3f3f46;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+    background: #fff;
+  }
+</style>
+{% endblock %}

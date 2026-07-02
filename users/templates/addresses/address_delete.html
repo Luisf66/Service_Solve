@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Excluir endereço — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-2">
+
+  <div class="max-w-md mx-auto">
+
+    <div class="bg-white rounded-xl border border-red-200 shadow-sm overflow-hidden">
+
+      <!-- Topo vermelho -->
+      <div class="bg-red-50 px-6 py-5 border-b border-red-100 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+          <i class="bi bi-exclamation-triangle text-red-500 text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-base font-semibold text-red-700">Confirmar exclusão</h1>
+          <p class="text-sm text-red-400 mt-0.5">Esta ação não pode ser desfeita</p>
+        </div>
+      </div>
+
+      <!-- Corpo -->
+      <div class="px-6 py-5">
+        <p class="text-sm text-zinc-600 leading-relaxed">
+          Você está prestes a excluir permanentemente o endereço
+          <span class="font-semibold text-zinc-800">{{ object.street }}, {{ object.number }}</span>.
+        </p>
+
+        <!-- Info do endereço -->
+        <div class="mt-4 bg-zinc-50 rounded-lg border border-zinc-200 px-4 py-3 flex items-start gap-3">
+          <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center shrink-0 mt-0.5">
+            <i class="bi bi-geo-alt text-amber-600" style="font-size: 15px;"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-zinc-800">{{ object.street }}, {{ object.number }}</p>
+            <p class="text-xs text-zinc-400 mt-0.5">{{ object.neighborhood }}, {{ object.city }}/{{ object.state }}</p>
+            <p class="text-xs text-zinc-400">CEP {{ object.zip_code }} · Usuário: {{ object.user.username }}</p>
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <form method="post" class="mt-6 flex items-center gap-3">
+          {% csrf_token %}
+          <button type="submit"
+            class="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+            <i class="bi bi-trash"></i> Sim, excluir
+          </button>
+          <a href="{% url 'users:user_addresses' user_pk %}"
+            class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+            <i class="bi bi-arrow-left"></i> Cancelar
+          </a>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

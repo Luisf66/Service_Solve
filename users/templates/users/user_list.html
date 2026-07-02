@@ -42,6 +42,7 @@
           <th class="text-left px-5 py-3 font-medium">Email</th>
           <th class="text-left px-5 py-3 font-medium">Tipo</th>
           <th class="text-left px-5 py-3 font-medium">Avaliação</th>
+          <th class="text-left px-5 py-3 font-medium">Cancelamentos Disponíveis</th>
           <th class="text-right px-5 py-3 font-medium">Ações</th>
         </tr>
       </thead>
@@ -84,6 +85,15 @@
               <span class="text-zinc-700 font-medium">{{ user.average_rating|floatformat:1 }}</span>
               <span class="text-zinc-400 text-xs">({{ user.total_ratings }})</span>
             </div>
+          </td>
+
+          <!-- Cancelamentos Disponíveis -->
+          <td class="px-5 py-3">
+            {% if user.cancellation_limit > 0 %}
+              <span class="text-zinc-700 font-medium">{{ user.cancellation_limit }}</span>
+            {% else %}
+              <span class="text-red-600 font-medium">0</span>
+            {% endif %}
           </td>
 
           <!-- Ações -->

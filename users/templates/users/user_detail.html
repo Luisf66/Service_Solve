@@ -77,6 +77,12 @@
       <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
         <i class="bi bi-geo-alt text-amber-500"></i>
         <h2 class="font-semibold text-zinc-700 text-sm">Endereços</h2>
+        <a href="{% url 'users:user_address_create' user.pk%}"
+          class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          style="margin-left: 61%;">
+          <i class="bi bi-plus-lg"></i>
+          Novo endereço
+        </a>
       </div>
       <ul class="divide-y divide-zinc-100">
         {% for address in user.addresses.all %}
@@ -94,6 +100,20 @@
                 {{ address.neighborhood }}, {{ address.city }}/{{ address.state }} · CEP {{ address.zip_code }}
               </p>
             </div>
+            
+            <div class="flex items-center justify-end gap-1">
+
+              <a href="{% url 'users:user_address_update' user.pk address.pk %}"
+                title="Editar"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                <i class="bi bi-pencil" style="font-size: 14px;"></i>
+              </a>
+              <a href="{% url 'users:user_address_delete' user.pk address.pk %}"
+                title="Excluir"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                <i class="bi bi-trash" style="font-size: 14px;"></i>
+              </a>
+            </div>
           </div>
           {% if address.is_primary %}
             <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-600 border border-amber-200 text-xs font-medium px-2 py-0.5 rounded-full shrink-0">
@@ -102,10 +122,14 @@
           {% endif %}
         </li>
         {% empty %}
-        <li class="px-6 py-10 text-center text-zinc-400 text-sm">
-          <i class="bi bi-geo-alt text-3xl block mb-2"></i>
-          Nenhum endereço cadastrado.
-        </li>
+        <div class="flex flex-col items-center gap-3 text-zinc-400" style="margin-top: 3%; margin-bottom: 5%;">
+          <i class="bi bi-geo-alt text-5xl"></i>
+          <p class="text-sm">Nenhum endereço cadastrado.</p>
+          <a href="{% url 'users:user_address_create' user.pk %}"
+            class="text-amber-500 hover:text-amber-600 text-sm font-medium transition-colors">
+            Cadastrar o primeiro endereço →
+          </a>
+        </div>
         {% endfor %}
       </ul>
     </div>
