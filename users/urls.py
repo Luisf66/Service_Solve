@@ -1,21 +1,21 @@
 from django.urls import path
+from users.views import user_views, address_views, telephone_views
 
-'''
+app_name = 'users'
+
 urlpatterns = [
-    #path('', ..., name='user-list'),
-    path('create/', ..., name='user-create'),
-    path('<int:pk>/', ..., name='user-detail'),
-    path('<int:pk>/update/', ..., name='user-update'),
-    path('<int:pk>/delete/', ..., name='user-delete')
+    path('', user_views.UserListView.as_view(), name='user_list'),
+    path('create/', user_views.UserCreateView.as_view(), name='user_create'),
+    path('<int:pk>/', user_views.UserDetailView.as_view(), name='user_detail'),
+    path('<int:pk>/update/', user_views.UserUpdateView.as_view(), name='user_update'),
+    path('<int:pk>/delete/', user_views.UserDeleteView.as_view(), name='user_delete'),
+    
+    path('<int:pk>/addresses/create/', address_views.AddressCreateView.as_view(), name='user_address_create'),
+    path('<int:pk>/addresses/<int:address_pk>/update/', address_views.AddressUpdateView.as_view(), name='user_address_update'),
+    path('<int:pk>/addresses/<int:address_pk>/delete/', address_views.AddressDeleteView.as_view(), name='user_address_delete'),
 
-    path('<int:pk>/addresses/', ..., name='user-addresses'),
-    path('<int:pk>/addresses/create/', ..., name='user-address-create'),
-    path('<int:pk>/addresses/<int:address_pk>/update/', ..., name='user-address-update'),
-    path('<int:pk>/addresses/<int:address_pk>/delete/', ..., name='user-address-delete'),
-
-    path('<int:pk>/telephones/', ..., name='user-telephones'),
-    path('<int:pk>/telephones/create/', ..., name='user-telephone-create'),
-    path('<int:pk>/telephones/<int:telephone_pk>/update/', ..., name='user-telephone-update'),
-    path('<int:pk>/telephones/<int:telephone_pk>/delete/', ..., name='user-telephone-delete'),
+    path('<int:pk>/telephones/create/', telephone_views.TelephoneCreateView.as_view(), name='user_telephone_create'),
+    path('<int:pk>/telephones/<int:telephone_pk>/update/', telephone_views.TelephoneUpdateView.as_view(), name='user_telephone_update'),
+    path('<int:pk>/telephones/<int:telephone_pk>/delete/', telephone_views.TelephoneDeleteView.as_view(), name='user_telephone_delete'),
+    
 ]
-'''
