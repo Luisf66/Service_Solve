@@ -1,13 +1,17 @@
 from django.urls import path
-from services import views
+from services.views import service_views, category_views
 
 
 app_name = 'services'
 
 urlpatterns = [
-    path('', views.ServiceListView.as_view(), name='service_list'),            # Listar Serviços
-    path('create/', views.ServiceCreateView.as_view(), name='service_create'), # Criar Serviço
+    path('', service_views.ServiceListView.as_view(), name='service_list'),            # Listar Serviços
+    path('create/', service_views.ServiceCreateView.as_view(), name='service_create'), # Criar Serviço
     #path('<int:pk>/', ..., name='service-detail'),             # Visualizar Serviço Especifico
+
+    path('categories/', category_views.ServiceCategoryListView.as_view(), name='category_list'), # Listar Categorias
+    path('categories/create/', category_views.ServiceCategoryCreateView.as_view(), name='category_create'), # Criar Categoria
+
 #
     #path('<int:pk>/reject/', ..., name='service-reject'),      # Prestador Rejeitar Serviço
     #path('<int:pk>/update/', ..., name='service-update'),      # Atualizar Dados do Serviço
