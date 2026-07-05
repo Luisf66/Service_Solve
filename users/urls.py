@@ -1,9 +1,11 @@
 from django.urls import path
-from users.views import user_views, address_views, telephone_views
+from users.views import user_views, address_views, telephone_views, auth_views
 
 app_name = 'users'
 
 urlpatterns = [
+    path('register/', auth_views.RegistroView.as_view(), name='register'),
+
     path('', user_views.UserListView.as_view(), name='user_list'),
     path('create/', user_views.UserCreateView.as_view(), name='user_create'),
     path('<int:pk>/', user_views.UserDetailView.as_view(), name='user_detail'),
