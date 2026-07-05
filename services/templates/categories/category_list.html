@@ -42,6 +42,7 @@
             <th class="text-left px-5 py-3 font-medium">Categoria</th>
             <th class="text-left px-5 py-3 font-medium">Descrição</th>
             <th class="text-left px-5 py-3 font-medium">Status</th>
+            <th class="text-right px-5 py-3 font-medium">Ações</th>
         </tr>
       </thead>
       <tbody id="serviceTableBody">
@@ -80,6 +81,25 @@
                 Inativa
               </span>
             {% endif %}
+          </td>
+
+          <!-- Ações -->
+          <td class="px-5 py-3">
+            <div class="flex items-center justify-end gap-1">
+
+              <a href="{% url 'services:category_update' category.pk %}"
+                title="Editar"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                <i class="bi bi-pencil" style="font-size: 14px;"></i>
+              </a>
+
+              <a href="{% url 'services:category_delete' category.pk %}"
+                title="Excluir"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                <i class="bi bi-trash" style="font-size: 14px;"></i>
+              </a>
+              
+            </div>
           </td>
 
         </tr>
