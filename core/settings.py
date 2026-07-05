@@ -56,6 +56,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'core.urls'
+LOGIN_REDIRECT_URL = 'services:service_list'
+LOGOUT_REDIRECT_URL = 'login'
 
 TEMPLATES = [
     {
