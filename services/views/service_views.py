@@ -10,6 +10,22 @@ class ServiceListView(ListView):
     template_name = 'service_list.html'
     context_object_name = 'services'
 
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Service.objects.none()  # Retorna um queryset vazio se o usuário não estiver autenticado
+        
+        if self.request.user.user_type == 'provider':
+            # Exibe todos os serviços
+            return Service.objects.all()
+        else:
+            # Filtra os serviços para mostrar apenas os que pertencem ao usuário logado
+            return Service.objects.filter(client=self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user  # Adiciona o usuário logado ao contexto
+        return context
+
 class ServiceCreateView(LoginRequiredMixin, CreateView):
     model = Service
     form_class = ServiceForm
@@ -24,6 +40,17 @@ class ServiceDetailView(DetailView):
     model = Service
     template_name = 'service_detail.html'
     context_object_name = 'service'
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Service.objects.none()  # Retorna um queryset vazio se o usuário não estiver autenticado
+        
+        if self.request.user.user_type == 'provider':
+            # Exibe todos os serviços
+            return Service.objects.all()
+        else:
+            # Filtra os serviços para mostrar apenas os que pertencem ao usuário logado
+            return Service.objects.filter(client=self.request.user)
 
 class ServiceUpdateView(LoginRequiredMixin, UpdateView):
     model = Service
