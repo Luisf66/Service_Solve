@@ -1,5 +1,6 @@
 from services.models import Service
 from services.forms.service_form import ServiceForm
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -62,3 +63,17 @@ class ServiceDeleteView(LoginRequiredMixin, DeleteView):
     model = Service
     template_name = 'service_delete.html'
     success_url = '/services/'  # Redireciona para a lista de serviços após a exclusão
+
+def service_accept(request, pk):
+    service = Service.objects.get(pk=pk)
+
+    print(f"Service Status: {service.status}\n")
+    print(f"Service ID: {service.id}\n Service category: {service.category}\n Service description: {service.description}\n")
+    print(f"Method: {request.method}\n")
+
+    if request.method == 'POST':
+        service.provider = request.user
+        service.status = 'accepted'
+        service.save()
+        return redirect('services:service_detail', pk=pk)
+    return render(request, 'service_detail.html', {'service': service})
