@@ -8,10 +8,4 @@ class ServiceForm(ModelForm):
         fields = [
             'description', 
             'category', 
-            'provider', 
-            'status', 
-            'price', 
-            'payment_method', 
-            'displacement_start', 
-            'displacement_end'
         ]
