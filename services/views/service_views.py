@@ -67,13 +67,22 @@ class ServiceDeleteView(LoginRequiredMixin, DeleteView):
 def service_accept(request, pk):
     service = Service.objects.get(pk=pk)
 
+    if request.method == 'POST':
+        service.provider = request.user
+        service.status = 'accepted'
+        service.save()
+        return redirect('services:service_detail', pk=pk)
+    return render(request, 'service_detail.html', {'service': service})
+
+def service_cancel(request, pk):
+    service = Service.objects.get(pk=pk)
+
     print(f"Service Status: {service.status}\n")
     print(f"Service ID: {service.id}\n Service category: {service.category}\n Service description: {service.description}\n")
     print(f"Method: {request.method}\n")
 
-    if request.method == 'POST':
-        service.provider = request.user
-        service.status = 'accepted'
+    if request.method == 'POST' and service.status == 'accepted' and service.provider == request.user:
+        service.status = 'canceled'
         service.save()
         return redirect('services:service_detail', pk=pk)
     return render(request, 'service_detail.html', {'service': service})

@@ -196,16 +196,22 @@
                 class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
                 <i class="bi bi-eye" style="font-size: 15px;"></i>
               </a>
-              <a href="{% url 'services:service_update' service.pk %}"
-                title="Editar"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
-                <i class="bi bi-pencil" style="font-size: 14px;"></i>
-              </a>
-              <a href="{% url 'services:service_delete' service.pk %}"
-                title="Excluir"
-                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors">
-                <i class="bi bi-trash" style="font-size: 14px;"></i>
-              </a>
+              <form action="{% url 'services:service_accept' service.pk %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit"
+                  class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                  <i class="bi bi-check"></i>
+                </button>
+              </form>
+
+              <form action="{% url 'services:service_cancel' service.pk %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit"
+                  class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                  <i class="bi bi-x"></i>
+                </button>
+              </form>
+
             </div>
           </td>
 

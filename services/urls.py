@@ -19,7 +19,7 @@ urlpatterns = [
 #
     #path('<int:pk>/reject/', ..., name='service-reject'),      # Prestador Rejeitar Serviço
     #path('<int:pk>/update/', ..., name='service-update'),      # Atualizar Dados do Serviço
-    #path('<int:pk>/cancel/', ..., name='service-cancel'),      # Cancelar Solicitação de Serviço
+    path('<int:pk>/cancel/', service_views.service_cancel, name='service_cancel'),      # Cancelar Solicitação de Serviço
     path('<int:pk>/accept/', service_views.service_accept, name='service_accept'),      # Prestador Aceitar Serviço
     #path('<int:pk>/schedule/', ..., name='service-schedule'),  # Agendar Serviço
     #path('<int:pk>/displace/', ..., name='service-displace'),  # Deslocamento do Prestador
