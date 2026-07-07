@@ -17,187 +17,224 @@
 
   <div class="max-w-2xl mx-auto flex flex-col gap-5">
 
-    <form method="post" class="flex flex-col gap-5">
-      {% csrf_token %}
+    {% if user.user_type == 'client' %}
+      <form method="post" class="flex flex-col gap-5">
+        {% csrf_token %}
 
-      <!-- Card: Informações principais -->
-      <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
-          <i class="bi bi-briefcase text-amber-500"></i>
-          <h2 class="text-sm font-semibold text-zinc-700">Informações principais</h2>
-        </div>
-        <div class="px-6 py-5 flex flex-col gap-5">
-
-          <!-- Categoria -->
-          <div class="flex flex-col gap-1.5">
-            <label for="{{ form.category.id_for_label }}" class="text-sm font-medium text-zinc-600">
-              Categoria
-            </label>
-            {{ form.category }}
-            {% if form.category.errors %}
-              <p class="text-xs text-red-500 flex items-center gap-1">
-                <i class="bi bi-exclamation-circle"></i> {{ form.category.errors|join:", " }}
-              </p>
-            {% endif %}
+        <!-- Card: Informações principais -->
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
+            <i class="bi bi-briefcase text-amber-500"></i>
+            <h2 class="text-sm font-semibold text-zinc-700">Informações principais</h2>
           </div>
+          <div class="px-6 py-5 flex flex-col gap-5">
 
-          <!-- Descrição -->
-          <div class="flex flex-col gap-1.5">
-            <label for="{{ form.description.id_for_label }}" class="text-sm font-medium text-zinc-600">
-              Descrição <span class="text-amber-500">*</span>
-            </label>
-            {{ form.description }}
-            {% if form.description.errors %}
-              <p class="text-xs text-red-500 flex items-center gap-1">
-                <i class="bi bi-exclamation-circle"></i> {{ form.description.errors|join:", " }}
-              </p>
-            {% endif %}
-          </div>
-
-          <!-- Status -->
-          <div class="flex flex-col gap-1.5">
-            <label for="{{ form.status.id_for_label }}" class="text-sm font-medium text-zinc-600">
-              Status <span class="text-amber-500">*</span>
-            </label>
-            {{ form.status }}
-            {% if form.status.errors %}
-              <p class="text-xs text-red-500 flex items-center gap-1">
-                <i class="bi bi-exclamation-circle"></i> {{ form.status.errors|join:", " }}
-              </p>
-            {% endif %}
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Card: Participantes -->
-      <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
-          <i class="bi bi-people text-amber-500"></i>
-          <h2 class="text-sm font-semibold text-zinc-700">Participantes</h2>
-        </div>
-        <div class="px-6 py-5 flex flex-col gap-5">
-
-          <!-- Cliente e Prestador lado a lado -->
-          <div class="grid grid-cols-2 gap-4">
+            <!-- Categoria -->
             <div class="flex flex-col gap-1.5">
-              <label for="{{ form.client.id_for_label }}" class="text-sm font-medium text-zinc-600">
-                Cliente <span class="text-amber-500">*</span>
+              <label for="{{ form.category.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                Categoria
               </label>
-              {{ form.client }}
-              {% if form.client.errors %}
+              {{ form.category }}
+              {% if form.category.errors %}
                 <p class="text-xs text-red-500 flex items-center gap-1">
-                  <i class="bi bi-exclamation-circle"></i> {{ form.client.errors|join:", " }}
+                  <i class="bi bi-exclamation-circle"></i> {{ form.category.errors|join:", " }}
                 </p>
               {% endif %}
             </div>
+
+            <!-- Descrição -->
             <div class="flex flex-col gap-1.5">
-              <label for="{{ form.provider.id_for_label }}" class="text-sm font-medium text-zinc-600">
-                Prestador
-                <span class="text-zinc-400 font-normal">(opcional)</span>
+              <label for="{{ form.description.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                Descrição <span class="text-amber-500">*</span>
               </label>
-              {{ form.provider }}
-              {% if form.provider.errors %}
+              {{ form.description }}
+              {% if form.description.errors %}
                 <p class="text-xs text-red-500 flex items-center gap-1">
-                  <i class="bi bi-exclamation-circle"></i> {{ form.provider.errors|join:", " }}
+                  <i class="bi bi-exclamation-circle"></i> {{ form.description.errors|join:", " }}
                 </p>
               {% endif %}
             </div>
+
+            <!-- Status -->
+            <div class="flex flex-col gap-1.5">
+              <label for="{{ form.status.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                Status <span class="text-amber-500">{{ service.status }}</span>
+              </label>
+              {{ form.status }}
+              {% if form.status.errors %}
+                <p class="text-xs text-red-500 flex items-center gap-1">
+                  <i class="bi bi-exclamation-circle"></i> {{ form.status.errors|join:", " }}
+                </p>
+              {% endif %}
+            </div>
+
+            <!-- Card: Pagamento -->
+            <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+              <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
+                <i class="bi bi-cash-coin text-amber-500"></i>
+                <h2 class="text-sm font-semibold text-zinc-700">Pagamento</h2>
+              </div>
+              <div class="px-6 py-5 flex flex-col gap-5">
+
+                <!-- Valor e Método lado a lado -->
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="flex flex-col gap-1.5">
+                    <label for="{{ form.payment_method.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                      Método de pagamento
+                      <span class="text-zinc-400 font-normal">(opcional)</span>
+                    </label>
+                    {{ form.payment_method }}
+                    {% if form.payment_method.errors %}
+                      <p class="text-xs text-red-500 flex items-center gap-1">
+                        <i class="bi bi-exclamation-circle"></i> {{ form.payment_method.errors|join:", " }}
+                      </p>
+                    {% endif %}
+                    <p class="text-xs text-zinc-400">Ex: PIX, Dinheiro, Cartão</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
-
         </div>
-      </div>
 
-      <!-- Card: Pagamento -->
-      <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
-          <i class="bi bi-cash-coin text-amber-500"></i>
-          <h2 class="text-sm font-semibold text-zinc-700">Pagamento</h2>
+        <!-- Botões -->
+        <div class="flex items-center gap-3">
+          <button type="submit"
+            class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+            <i class="bi bi-check-lg"></i> Salvar
+          </button>
+          <a href="{% url 'services:service_list' %}"
+            class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+            <i class="bi bi-x-lg"></i> Cancelar
+          </a>
         </div>
-        <div class="px-6 py-5 flex flex-col gap-5">
 
-          <!-- Valor e Método lado a lado -->
-          <div class="grid grid-cols-2 gap-4">
-            <div class="flex flex-col gap-1.5">
-              <label for="{{ form.price.id_for_label }}" class="text-sm font-medium text-zinc-600">
-                Valor (R$)
-                <span class="text-zinc-400 font-normal">(opcional)</span>
-              </label>
-              {{ form.price }}
-              {% if form.price.errors %}
-                <p class="text-xs text-red-500 flex items-center gap-1">
-                  <i class="bi bi-exclamation-circle"></i> {{ form.price.errors|join:", " }}
-                </p>
-              {% endif %}
-            </div>
-            <div class="flex flex-col gap-1.5">
-              <label for="{{ form.payment_method.id_for_label }}" class="text-sm font-medium text-zinc-600">
-                Método de pagamento
-                <span class="text-zinc-400 font-normal">(opcional)</span>
-              </label>
-              {{ form.payment_method }}
-              {% if form.payment_method.errors %}
-                <p class="text-xs text-red-500 flex items-center gap-1">
-                  <i class="bi bi-exclamation-circle"></i> {{ form.payment_method.errors|join:", " }}
-                </p>
-              {% endif %}
-              <p class="text-xs text-zinc-400">Ex: PIX, Dinheiro, Cartão</p>
-            </div>
+      </form>
+
+    <!-- Olhos do prestador -->  
+    {% elif user.user_type == 'provider' %}
+      <form method="post" class="flex flex-col gap-5">
+        {% csrf_token %}
+
+        <!-- Card: Participantes -->
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
+            <i class="bi bi-people text-amber-500"></i>
+            <h2 class="text-sm font-semibold text-zinc-700">Participantes</h2>
           </div>
+          <div class="px-6 py-5 flex flex-col gap-5">
 
-        </div>
-      </div>
-
-      <!-- Card: Deslocamento -->
-      <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
-          <i class="bi bi-geo text-amber-500"></i>
-          <h2 class="text-sm font-semibold text-zinc-700">Janela de deslocamento</h2>
-          <span class="text-xs text-zinc-400 ml-1">(opcional)</span>
-        </div>
-        <div class="px-6 py-5 flex flex-col gap-5">
-
-          <div class="grid grid-cols-2 gap-4">
-            <div class="flex flex-col gap-1.5">
-              <label for="{{ form.displacement_start.id_for_label }}" class="text-sm font-medium text-zinc-600">
-                Início
-              </label>
-              {{ form.displacement_start }}
-              {% if form.displacement_start.errors %}
-                <p class="text-xs text-red-500 flex items-center gap-1">
-                  <i class="bi bi-exclamation-circle"></i> {{ form.displacement_start.errors|join:", " }}
-                </p>
-              {% endif %}
+            <!-- Cliente e Prestador lado a lado -->
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label for="{{ form.client.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                  Cliente <span class="text-amber-500">{{ service.client.username }}</span>
+                </label>
+                {{ form.client }}
+                {% if form.client.errors %}
+                  <p class="text-xs text-red-500 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i> {{ form.client.errors|join:", " }}
+                  </p>
+                {% endif %}
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label for="{{ form.provider.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                  Prestador
+                  <span class="text-zinc-400 font-normal">{{ service.provider.username }}</span>
+                </label>
+                {{ form.provider }}
+                {% if form.provider.errors %}
+                  <p class="text-xs text-red-500 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i> {{ form.provider.errors|join:", " }}
+                  </p>
+                {% endif %}
+              </div>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <label for="{{ form.displacement_end.id_for_label }}" class="text-sm font-medium text-zinc-600">
-                Fim
-              </label>
-              {{ form.displacement_end }}
-              {% if form.displacement_end.errors %}
-                <p class="text-xs text-red-500 flex items-center gap-1">
-                  <i class="bi bi-exclamation-circle"></i> {{ form.displacement_end.errors|join:", " }}
-                </p>
-              {% endif %}
-            </div>
+
           </div>
-
         </div>
-      </div>
 
-      <!-- Botões -->
-      <div class="flex items-center gap-3">
-        <button type="submit"
-          class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
-          <i class="bi bi-check-lg"></i> Salvar
-        </button>
-        <a href="{% url 'services:service_list' %}"
-          class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
-          <i class="bi bi-x-lg"></i> Cancelar
-        </a>
-      </div>
+        <!-- Card: Pagamento -->
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
+            <i class="bi bi-cash-coin text-amber-500"></i>
+            <h2 class="text-sm font-semibold text-zinc-700">Pagamento</h2>
+          </div>
+          <div class="px-6 py-5 flex flex-col gap-5">
 
-    </form>
+            <!-- Valor e Método lado a lado -->
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label for="{{ form.price.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                  Valor (R$)
+                  <span class="text-zinc-400 font-normal">(opcional)</span>
+                </label>
+                {{ form.price }}
+                {% if form.price.errors %}
+                  <p class="text-xs text-red-500 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i> {{ form.price.errors|join:", " }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Card: Deslocamento -->
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
+            <i class="bi bi-geo text-amber-500"></i>
+            <h2 class="text-sm font-semibold text-zinc-700">Janela de deslocamento</h2>
+            <span class="text-xs text-zinc-400 ml-1">(opcional)</span>
+          </div>
+          <div class="px-6 py-5 flex flex-col gap-5">
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="flex flex-col gap-1.5">
+                <label for="{{ form.displacement_start.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                  Início
+                </label>
+                {{ form.displacement_start }}
+                {% if form.displacement_start.errors %}
+                  <p class="text-xs text-red-500 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i> {{ form.displacement_start.errors|join:", " }}
+                  </p>
+                {% endif %}
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label for="{{ form.displacement_end.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                  Fim
+                </label>
+                {{ form.displacement_end }}
+                {% if form.displacement_end.errors %}
+                  <p class="text-xs text-red-500 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i> {{ form.displacement_end.errors|join:", " }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="flex items-center gap-3" style="margin-left: 30%;">
+          <button type="submit"
+            class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+            <i class="bi bi-check-lg"></i> Salvar
+          </button>
+          <a href="{% url 'services:service_list' %}"
+            class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+            <i class="bi bi-x-lg"></i> Cancelar
+          </a>
+        </div>
+
+      </form>
+    {% endif %}
+
   </div>
 </div>
 

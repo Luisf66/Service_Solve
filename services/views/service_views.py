@@ -1,6 +1,7 @@
 from services.models import Service
-from services.forms.service_form import ServiceForm
+from services.forms.service_form import ServiceForm, PaymentProviderForm
 from django.shortcuts import render, redirect
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -55,9 +56,21 @@ class ServiceDetailView(DetailView):
 
 class ServiceUpdateView(LoginRequiredMixin, UpdateView):
     model = Service
-    form_class = ServiceForm
     template_name = 'service_form.html'
-    success_url = '/services/'  # Redireciona para a lista de serviços após a atualização
+    success_url = '/services/'
+
+    def get_form_class(self):
+        service = self.get_object()
+        user = self.request.user
+
+        if service.client == user:
+            return ServiceForm
+
+        if user.user_type == 'provider':
+            return PaymentProviderForm
+
+        # Se o usuário não é nem o criador nem um prestador, bloqueia o acesso
+        raise PermissionDenied
 
 class ServiceDeleteView(LoginRequiredMixin, DeleteView):
     model = Service

@@ -8,4 +8,15 @@ class ServiceForm(ModelForm):
         fields = [
             'description', 
             'category', 
+            'payment_method',
+        ]
+
+
+class PaymentProviderForm(ModelForm):
+    class Meta:
+        model = Service
+        fields = [
+            'price',
+            'displacement_start',
+            'displacement_end',
         ]
