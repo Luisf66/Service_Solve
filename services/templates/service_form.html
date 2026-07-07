@@ -55,18 +55,20 @@
               {% endif %}
             </div>
 
-            <!-- Status -->
-            <div class="flex flex-col gap-1.5">
-              <label for="{{ form.status.id_for_label }}" class="text-sm font-medium text-zinc-600">
-                Status <span class="text-amber-500">{{ service.status }}</span>
-              </label>
-              {{ form.status }}
-              {% if form.status.errors %}
-                <p class="text-xs text-red-500 flex items-center gap-1">
-                  <i class="bi bi-exclamation-circle"></i> {{ form.status.errors|join:", " }}
-                </p>
-              {% endif %}
-            </div>
+            {% if service.status %}
+              <!-- Status -->
+              <div class="flex flex-col gap-1.5">
+                <label for="{{ form.status.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                  Status <span class="text-amber-500">{{ service.status }}</span>
+                </label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                  <p class="text-xs text-red-500 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i> {{ form.status.errors|join:", " }}
+                  </p>
+                {% endif %}
+              </div>
+            {% endif %}
 
             <!-- Card: Pagamento -->
             <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
@@ -100,9 +102,9 @@
         </div>
 
         <!-- Botões -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3" style="margin-left: 30%;">
           <button type="submit"
-            class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+            class="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
             <i class="bi bi-check-lg"></i> Salvar
           </button>
           <a href="{% url 'services:service_list' %}"
