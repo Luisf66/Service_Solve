@@ -16,12 +16,12 @@ class Service(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pendente'),
         ('accepted', 'Aceito'),
-        ('scheduled', 'Agendado'),
-        ('rejected', 'Rejeitado'),
-        ('in_displacement', 'Em deslocamento'),
-        ('in_progress', 'Em andamento'),
-        ('completed', 'Concluído'),
-        ('rated', 'Avaliado'),
+        ('scheduled', 'Agendado'), 
+        #('rejected', 'Rejeitado'),
+        ('in_displacement', 'Em deslocamento'), # 
+        ('in_progress', 'Em andamento'), # 
+        ('completed', 'Concluído'), #
+        ('rated', 'Avaliado'), #
         ('canceled_by_client', 'Cancelado pelo cliente'),
         ('canceled_by_provider', 'Cancelado pelo prestador de serviço'),
     )
@@ -40,6 +40,11 @@ class Service(models.Model):
 
     def __str__(self):
         return f"Serviço #{self.pk} - {self.status}"
+    
+    def save(self, *args, **kwargs):
+        if self.displacement_start and self.displacement_end and self.status == 'accepted':
+            self.status = 'scheduled'
+        super().save(*args, **kwargs)
     
 # Model Categoria do Prestador
 class ProviderCategory(models.Model):

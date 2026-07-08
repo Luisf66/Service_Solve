@@ -11,11 +11,13 @@
       <h1 class="text-2xl font-semibold text-zinc-800">Serviços</h1>
       <p class="text-sm text-zinc-400 mt-0.5">Gerencie todos os serviços do sistema</p>
     </div>
-    <a href="{% url 'services:service_create' %}"
-      class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
-      <i class="bi bi-plus-lg"></i>
-      Novo serviço
-    </a>
+    {% if user.user_type == 'client' %}
+      <a href="{% url 'services:service_create' %}"
+        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+        <i class="bi bi-plus-lg"></i>
+        Novo serviço
+      </a>
+    {% endif %}
   </div>
 
   <!-- Filtros de status -->

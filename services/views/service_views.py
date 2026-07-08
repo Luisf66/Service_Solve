@@ -80,7 +80,7 @@ class ServiceDeleteView(LoginRequiredMixin, DeleteView):
 def service_accept(request, pk):
     service = Service.objects.get(pk=pk)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and service.status == 'pending':
         service.provider = request.user
         service.status = 'accepted'
         service.save()
