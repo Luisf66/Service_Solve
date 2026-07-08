@@ -90,12 +90,13 @@ def service_accept(request, pk):
 def service_cancel(request, pk):
     service = Service.objects.get(pk=pk)
 
-    print(f"Service Status: {service.status}\n")
-    print(f"Service ID: {service.id}\n Service category: {service.category}\n Service description: {service.description}\n")
-    print(f"Method: {request.method}\n")
-
     if request.method == 'POST' and service.status == 'accepted' and service.provider == request.user:
-        service.status = 'canceled'
+        service.status = 'canceled_by_provider'
+        service.save()
+        return redirect('services:service_detail', pk=pk)
+    
+    if request.method == 'POST' and service.status == 'accepted' and service.client == request.user:
+        service.status = 'canceled_by_client'
         service.save()
         return redirect('services:service_detail', pk=pk)
     return render(request, 'service_detail.html', {'service': service})

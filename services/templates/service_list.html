@@ -219,6 +219,17 @@
             <!-- Ações de cliente -->
             <td class="px-5 py-3">
               <div class="flex items-center justify-end gap-1">
+
+                {% if service.status == 'accepted' %}
+                  <form action="{% url 'services:service_cancel' service.pk %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit"
+                      class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </form>
+                {% endif %}
+
                 <a href="{% url 'services:service_detail' service.pk %}"
                   title="Ver detalhes"
                   class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
