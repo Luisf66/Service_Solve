@@ -17,9 +17,8 @@ class Service(models.Model):
         ('pending', 'Pendente'),
         ('accepted', 'Aceito'),
         ('scheduled', 'Agendado'), 
-        #('rejected', 'Rejeitado'),
-        ('in_displacement', 'Em deslocamento'), # 
-        ('in_progress', 'Em andamento'), # 
+        ('in_displacement', 'Em deslocamento'),
+        ('in_progress', 'Em andamento'),
         ('completed', 'Concluído'), #
         ('rated', 'Avaliado'), #
         ('canceled_by_client', 'Cancelado pelo cliente'),

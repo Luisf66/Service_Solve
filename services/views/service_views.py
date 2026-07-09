@@ -100,3 +100,12 @@ def service_cancel(request, pk):
         service.save()
         return redirect('services:service_detail', pk=pk)
     return render(request, 'service_detail.html', {'service': service})
+
+def service_complete(request, pk):
+    service = Service.objects.get(pk=pk)
+
+    if request.method == 'POST' and service.status == 'in_progress' and service.client == request.user:
+        service.status = 'completed'
+        service.save()
+        return redirect('services:service_detail', pk=pk)
+    return render(request, 'service_detail.html', {'service': service})

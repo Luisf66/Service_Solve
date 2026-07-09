@@ -23,7 +23,7 @@ urlpatterns = [
     path('<int:pk>/accept/', service_views.service_accept, name='service_accept'),      # Prestador Aceitar Serviço
     #path('<int:pk>/schedule/', ..., name='service-schedule'),  # Agendar Serviço
     #path('<int:pk>/displace/', ..., name='service-displace'),  # Deslocamento do Prestador
-    #path('<int:pk>/complete/', ..., name='service-complete'),  # Finalizar Serviço
+    path('<int:pk>/complete/', service_views.service_complete, name='service_complete'),# Finalizar Serviço
 #
     #path('providers/', ..., name='provider-list'),             # Listar Prestadores de Serviço
     #path('categories/', ..., name='category-list'),            # Listar Categorias de Serviço
