@@ -9,6 +9,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         now = timezone.now()
 
+        print(f"Atualizando status de serviços em {now}...\n")
+
         updated_disp = Service.objects.filter(
             status='scheduled',
             displacement_start__lte=now,

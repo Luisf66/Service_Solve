@@ -1,4 +1,4 @@
-from services.models import Service
+from services.models import Service, ServiceStatusHistory
 from services.forms.service_form import ServiceForm, PaymentProviderForm
 from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
@@ -84,20 +84,26 @@ def service_accept(request, pk):
         service.provider = request.user
         service.status = 'accepted'
         service.save()
+        # Criar histórico de status
+        ServiceStatusHistory.objects.create(service=service, previous_status='pending', new_status='accepted', changed_by=request.user)
         return redirect('services:service_detail', pk=pk)
     return render(request, 'service_detail.html', {'service': service})
 
 def service_cancel(request, pk):
     service = Service.objects.get(pk=pk)
 
-    if request.method == 'POST' and service.status == 'accepted' and service.provider == request.user:
+    if request.method == 'POST' and service.status == 'accepted' or service.status == 'scheduled' and service.provider == request.user:
         service.status = 'canceled_by_provider'
         service.save()
+        # Criar histórico de status
+        ServiceStatusHistory.objects.create(service=service, previous_status='accepted', new_status='canceled_by_provider', changed_by=request.user)
         return redirect('services:service_detail', pk=pk)
     
-    if request.method == 'POST' and service.status == 'accepted' and service.client == request.user:
+    if request.method == 'POST' and service.status == 'accepted' or service.status == 'scheduled' and service.client == request.user:
         service.status = 'canceled_by_client'
         service.save()
+        # Criar histórico de status
+        ServiceStatusHistory.objects.create(service=service, previous_status='accepted', new_status='canceled_by_client', changed_by=request.user)
         return redirect('services:service_detail', pk=pk)
     return render(request, 'service_detail.html', {'service': service})
 
@@ -107,5 +113,7 @@ def service_complete(request, pk):
     if request.method == 'POST' and service.status == 'in_progress' and service.client == request.user:
         service.status = 'completed'
         service.save()
+        # Criar histórico de status
+        ServiceStatusHistory.objects.create(service=service, previous_status='in_progress', new_status='completed', changed_by=request.user)
         return redirect('services:service_detail', pk=pk)
     return render(request, 'service_detail.html', {'service': service})

@@ -19,7 +19,7 @@ class Service(models.Model):
         ('scheduled', 'Agendado'), 
         ('in_displacement', 'Em deslocamento'),
         ('in_progress', 'Em andamento'),
-        ('completed', 'Concluído'), #
+        ('completed', 'Concluído'), 
         ('rated', 'Avaliado'), #
         ('canceled_by_client', 'Cancelado pelo cliente'),
         ('canceled_by_provider', 'Cancelado pelo prestador de serviço'),
@@ -43,6 +43,7 @@ class Service(models.Model):
     def save(self, *args, **kwargs):
         if self.displacement_start and self.displacement_end and self.status == 'accepted':
             self.status = 'scheduled'
+            ServiceStatusHistory.objects.create(service=self, previous_status='accepted', new_status='scheduled', changed_by=self.client)
         super().save(*args, **kwargs)
     
 # Model Categoria do Prestador
