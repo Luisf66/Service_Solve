@@ -195,9 +195,9 @@
             <i class="bi bi-arrow-right text-zinc-400" style="font-size: 11px;"></i>
           </div>
           <div class="flex-1 flex items-center gap-2 flex-wrap">
-            <span class="text-xs text-zinc-400">{{ history.previous_status|default:"—" }}</span>
+            <span class="text-xs text-zinc-400">{{ history.get_previous_status_display|default:"—" }}</span>
             <i class="bi bi-arrow-right text-zinc-300" style="font-size: 10px;"></i>
-            <span class="text-xs font-medium text-zinc-700">{{ history.new_status }}</span>
+            <span class="text-xs font-medium text-zinc-700">{{ history.get_new_status_display }}</span>
           </div>
           <div class="text-right shrink-0">
             <p class="text-xs text-zinc-500">{{ history.changed_by.username }}</p>
