@@ -1,0 +1,14 @@
+{% extends "base.html" %} 
+
+{% block title %}{% if object %}Editar avaliação{% else %}Nova avaliação{% endif %} — Service Solve{% endblock %}
+
+{% block content %}
+
+<!-- review_create.html -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enviar avaliação</button>
+</form>
+
+{% endblock %}
