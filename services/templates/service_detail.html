@@ -299,21 +299,32 @@
           </button>
         </form>
 
-        <form action="{% url 'reviews:review_create' service.pk %}" method="get">
-          <button type="submit"
-            class="w-full flex items-center gap-2 border border-yellow-300 hover:bg-yellow-50 text-yellow-600 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
-            <i class="bi bi-star"></i> Avaliar
-          </button>
-        </form>
+        {% with reviews=service.reviews.all %}
+          {% if not reviews %}
+            <form action="{% url 'reviews:review_create' service.pk %}" method="get">
+              <button type="submit"
+              class="w-full flex items-center gap-2 border border-yellow-300 hover:bg-yellow-50 text-yellow-600 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+              <i class="bi bi-star"></i> Avaliar
+              </button>
+            </form>
+          {% endif %}
+        {% endwith %}
 
       {% elif user.user_type == 'provider' %}
-        <form action="{% url 'services:service_accept' service.pk %}" method="post">
-          {% csrf_token %}
-          <button type="submit"
-            class="w-full flex items-center gap-2 border border-green-300 hover:bg-green-50 text-green-600 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
-            <i class="bi bi-check-lg"></i> Aceitar
-          </button>
-        </form>
+        <a href="{% url 'services:service_update' service.pk %}"
+          class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+          <i class="bi bi-pencil"></i> Editar
+        </a>
+        
+        {% if service.status == 'pending' %}
+          <form action="{% url 'services:service_accept' service.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit"
+              class="w-full flex items-center gap-2 border border-green-300 hover:bg-green-50 text-green-600 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+              <i class="bi bi-check-lg"></i> Aceitar
+            </button>
+          </form>
+        {% endif %}
 
         {% with reviews=service.reviews.all %}
           {% if not reviews %}
