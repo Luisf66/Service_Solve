@@ -8,8 +8,8 @@ def service_review(request, service_pk):
     service = get_object_or_404(Service, pk=service_pk)
 
     # Só quem é o client e só se o serviço estiver 'completed' pode avaliar
-    if service.status != 'completed' or service.client != request.user:
-        return redirect('services:service_detail', pk=service_pk)
+    #if service.status != 'scheduled' or service.client != request.user:
+    #    return redirect('services:service_detail', pk=service_pk)
 
     if request.method == 'POST':
         form = ReviewForm(request.POST)
