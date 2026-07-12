@@ -24,7 +24,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='auth/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
-    #path('chat/', include('chat.urls')),  # Include the chat app URLs
+    path('chat/', include('chat.urls')),  # Include the chat app URLs
     path('reviews/', include('reviews.urls')),  # Include the reviews app URLs
     path('services/', include('services.urls')),  # Include the services app URLs
     path('users/', include('users.urls')),  # Include the users app URLs

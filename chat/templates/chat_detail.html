@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Chat — Serviço #{{ service.pk }} — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-6 max-w-3xl mx-auto flex flex-col" style="height: calc(100vh - 80px);">
+
+  <!-- Cabeçalho -->
+  <div class="mb-4 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-semibold text-zinc-800">Chat — Serviço #{{ service.pk }}</h1>
+      <p class="text-sm text-zinc-400 mt-0.5">
+        {% if service.category %}{{ service.category.name }} · {% endif %}
+        entre <strong class="text-zinc-600">{{ service.client.username }}</strong>
+        e
+        {% if service.provider %}
+          <strong class="text-zinc-600">{{ service.provider.username }}</strong>
+        {% else %}
+          <span class="text-zinc-400">aguardando prestador</span>
+        {% endif %}
+      </p>
+    </div>
+    <a href="{% url 'services:service_detail' service.pk %}"
+      class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+      <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+  </div>
+
+  <!-- Info do serviço -->
+  <div class="bg-white rounded-xl border border-zinc-200 shadow-sm px-4 py-3 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+        <i class="bi bi-briefcase text-blue-600" style="font-size: 14px;"></i>
+      </div>
+      <p class="text-sm text-zinc-600 truncate max-w-xs">{{ service.description }}</p>
+    </div>
+
+    {% if service.status == 'pending' %}
+      <span class="inline-flex items-center gap-1.5 bg-yellow-50 text-yellow-700 border border-yellow-200 text-xs font-medium px-3 py-1 rounded-full shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 inline-block"></span>
+        {{ service.get_status_display }}
+      </span>
+    {% elif service.status == 'accepted' %}
+      <span class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-medium px-3 py-1 rounded-full shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
+        {{ service.get_status_display }}
+      </span>
+    {% elif service.status == 'scheduled' %}
+      <span class="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-medium px-3 py-1 rounded-full shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 inline-block"></span>
+        {{ service.get_status_display }}
+      </span>
+    {% elif service.status == 'completed' or service.status == 'rated' %}
+      <span class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 border border-green-200 text-xs font-medium px-3 py-1 rounded-full shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"></span>
+        {{ service.get_status_display }}
+      </span>
+    {% elif service.status == 'rejected' or 'canceled' in service.status %}
+      <span class="inline-flex items-center gap-1.5 bg-red-50 text-red-700 border border-red-200 text-xs font-medium px-3 py-1 rounded-full shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-red-400 inline-block"></span>
+        {{ service.get_status_display }}
+      </span>
+    {% endif %}
+  </div>
+
+  <!-- Área de mensagens -->
+  <div id="messages-area"
+    class="flex-1 overflow-y-auto flex flex-col gap-3 mb-4 pr-1">
+
+    {% for message in messages %}
+      {% if message.sender == request.user %}
+        <!-- Mensagem própria -->
+        <div class="flex items-end gap-2 flex-row-reverse">
+          <div class="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+            <i class="bi bi-person text-amber-600" style="font-size: 13px;"></i>
+          </div>
+          <div class="flex flex-col items-end max-w-xs lg:max-w-md">
+            <p class="text-xs text-zinc-400 mb-1 mr-0.5">você</p>
+            <div class="bg-blue-500 text-white text-sm px-4 py-2.5 rounded-xl rounded-br-sm leading-relaxed">
+              {{ message.content }}
+            </div>
+            <p class="text-xs text-zinc-300 mt-1 mr-0.5">{{ message.sent_at|date:"d/m/Y H:i" }}</p>
+          </div>
+        </div>
+      {% else %}
+        <!-- Mensagem do outro -->
+        <div class="flex items-end gap-2">
+          {% if message.sender == service.client %}
+            <div class="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+              <i class="bi bi-person text-amber-600" style="font-size: 13px;"></i>
+            </div>
+          {% else %}
+            <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+              <i class="bi bi-briefcase text-blue-600" style="font-size: 12px;"></i>
+            </div>
+          {% endif %}
+          <div class="flex flex-col max-w-xs lg:max-w-md">
+            <p class="text-xs text-zinc-400 mb-1 ml-0.5">{{ message.sender.username }}</p>
+            <div class="bg-white border border-zinc-200 text-zinc-700 text-sm px-4 py-2.5 rounded-xl rounded-bl-sm leading-relaxed shadow-sm">
+              {{ message.content }}
+            </div>
+            <p class="text-xs text-zinc-300 mt-1 ml-0.5">{{ message.sent_at|date:"d/m/Y H:i" }}</p>
+          </div>
+        </div>
+      {% endif %}
+    {% empty %}
+      <div class="flex-1 flex flex-col items-center justify-center text-zinc-400 text-sm py-16">
+        <i class="bi bi-chat text-4xl mb-3"></i>
+        <p>Nenhuma mensagem ainda.</p>
+        <p class="text-xs mt-1">Inicie a conversa com o outro participante.</p>
+      </div>
+    {% endfor %}
+
+  </div>
+
+  <!-- Input de envio -->
+  <div class="bg-white border border-zinc-200 rounded-xl shadow-sm px-4 py-3 flex items-end gap-3">
+    <textarea
+      id="msg-input"
+      rows="1"
+      placeholder="Digite sua mensagem... (Enter para enviar, Shift+Enter para quebrar linha)"
+      class="flex-1 bg-transparent border-none outline-none text-sm text-zinc-700 placeholder-zinc-400 resize-none leading-relaxed"
+      style="max-height: 120px;"
+      oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+    ></textarea>
+    <button id="send-btn"
+      class="w-9 h-9 rounded-lg bg-blue-500 hover:bg-blue-600 flex items-center justify-center shrink-0 transition-colors">
+      <i class="bi bi-send text-white" style="font-size: 14px;"></i>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const serviceId = {{ service.pk }};
+  const messagesArea = document.getElementById('messages-area');
+  const input = document.getElementById('msg-input');
+  const sendBtn = document.getElementById('send-btn');
+  const csrfToken = '{{ csrf_token }}';
+  const currentUser = '{{ request.user.username }}';
+
+  // ID da última mensagem carregada — usado para polling incremental
+  let lastMessageId = {% if messages %}{{ messages.last.id }}{% else %}0{% endif %};
+
+  // Scroll para o final da conversa
+  function scrollToBottom() {
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+  }
+
+  // Renderiza uma mensagem nova vinda do polling
+  function renderMessage(msg) {
+    const isMe = msg.is_me;
+    const div = document.createElement('div');
+    div.classList.add('flex', 'items-end', 'gap-2');
+    if (isMe) div.classList.add('flex-row-reverse');
+
+    const avatarColor = isMe ? 'bg-amber-100' : 'bg-blue-100';
+    const avatarIcon = isMe ? 'bi-person text-amber-600' : 'bi-briefcase text-blue-600';
+    const bubbleCss = isMe
+      ? 'bg-blue-500 text-white rounded-xl rounded-br-sm'
+      : 'bg-white border border-zinc-200 text-zinc-700 rounded-xl rounded-bl-sm shadow-sm';
+    const nameAlign = isMe ? 'items-end mr-0.5' : 'ml-0.5';
+    const timeAlign = isMe ? 'mr-0.5' : 'ml-0.5';
+    const senderLabel = isMe ? 'você' : msg.sender;
+
+    div.innerHTML = `
+      <div class="w-7 h-7 rounded-full ${avatarColor} flex items-center justify-center shrink-0">
+        <i class="bi ${avatarIcon}" style="font-size: 12px;"></i>
+      </div>
+      <div class="flex flex-col max-w-xs lg:max-w-md ${isMe ? 'items-end' : ''}">
+        <p class="text-xs text-zinc-400 mb-1 ${nameAlign}">${senderLabel}</p>
+        <div class="${bubbleCss} text-sm px-4 py-2.5 leading-relaxed">
+          ${msg.content}
+        </div>
+        <p class="text-xs text-zinc-300 mt-1 ${timeAlign}">${msg.sent_at}</p>
+      </div>
+    `;
+
+    messagesArea.appendChild(div);
+    scrollToBottom();
+    lastMessageId = msg.id;
+  }
+
+  // Envia mensagem via POST
+  async function sendMessage() {
+    const content = input.value.trim();
+    if (!content) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    try {
+      const res = await fetch(`/chat/${serviceId}/messages/send/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': csrfToken,
+        },
+        body: `content=${encodeURIComponent(content)}`,
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        renderMessage(data);
+      }
+    } catch (err) {
+      console.error('Erro ao enviar mensagem:', err);
+    } finally {
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  // Polling — busca mensagens novas a cada 3 segundos
+  async function pollMessages() {
+    try {
+      const res = await fetch(`/chat/${serviceId}/messages/?after=${lastMessageId}`);
+      const data = await res.json();
+      if (data.messages && data.messages.length > 0) {
+        data.messages.forEach(renderMessage);
+      }
+    } catch (err) {
+      console.error('Erro no polling:', err);
+    }
+  }
+
+  // Eventos
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  // Inicia scroll e polling
+  scrollToBottom();
+  setInterval(pollMessages, 3000);
+</script>
+{% endblock %}
