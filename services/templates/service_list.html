@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}Serviços — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-2">
+
+  <!-- Cabeçalho -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-zinc-800">Serviços</h1>
+      <p class="text-sm text-zinc-400 mt-0.5">Gerencie todos os serviços do sistema</p>
+    </div>
+    {% if user.user_type == 'client' %}
+      <a href="{% url 'services:service_create' %}"
+        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+        <i class="bi bi-plus-lg"></i>
+        Novo serviço
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Filtros de status -->
+  <div class="flex items-center gap-2 mb-4 flex-wrap">
+    <span class="text-xs text-zinc-400 font-medium uppercase tracking-wide mr-1">Filtrar:</span>
+    <button onclick="filterStatus('')"
+      class="status-btn text-xs px-3 py-1.5 rounded-full border border-zinc-300 text-zinc-600 hover:bg-zinc-100 transition-colors">
+      Todos
+    </button>
+    <button onclick="filterStatus('pending')"
+      class="status-btn text-xs px-3 py-1.5 rounded-full border border-yellow-300 text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition-colors">
+      Pendente
+    </button>
+    <button onclick="filterStatus('accepted')"
+      class="status-btn text-xs px-3 py-1.5 rounded-full border border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
+      Aceito
+    </button>
+    <button onclick="filterStatus('scheduled')"
+      class="status-btn text-xs px-3 py-1.5 rounded-full border border-indigo-300 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 transition-colors">
+      Agendado
+    </button>
+    <button onclick="filterStatus('in_progress')"
+      class="status-btn text-xs px-3 py-1.5 rounded-full border border-cyan-300 text-cyan-700 bg-cyan-50 hover:bg-cyan-100 transition-colors">
+      Em andamento
+    </button>
+    <button onclick="filterStatus('completed')"
+      class="status-btn text-xs px-3 py-1.5 rounded-full border border-green-300 text-green-700 bg-green-50 hover:bg-green-100 transition-colors">
+      Concluído
+    </button>
+    <button onclick="filterStatus('canceled')"
+      class="status-btn text-xs px-3 py-1.5 rounded-full border border-red-300 text-red-700 bg-red-50 hover:bg-red-100 transition-colors">
+      Cancelado
+    </button>
+  </div>
+
+  <!-- Card da tabela -->
+  <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+
+    <!-- Barra de busca -->
+    <div class="px-5 py-4 border-b border-zinc-100 flex items-center gap-3">
+      <div class="relative flex-1 max-w-sm">
+        <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar por cliente, prestador ou categoria..."
+          class="w-full pl-9 pr-4 py-2 text-sm bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent">
+      </div>
+      <span class="text-xs text-zinc-400">{{ services|length }} serviço{{ services|length|pluralize:"s" }}</span>
+    </div>
+
+    <!-- Tabela -->
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-zinc-50 border-b border-zinc-200 text-zinc-500 text-xs uppercase tracking-wide">
+          <th class="text-left px-5 py-3 font-medium">#</th>
+          <th class="text-left px-5 py-3 font-medium">Cliente</th>
+          <th class="text-left px-5 py-3 font-medium">Prestador</th>
+          <th class="text-left px-5 py-3 font-medium">Categoria</th>
+          <th class="text-left px-5 py-3 font-medium">Status</th>
+          <th class="text-left px-5 py-3 font-medium">Valor</th>
+          <th class="text-left px-5 py-3 font-medium">Criado em</th>
+          <th class="text-right px-5 py-3 font-medium">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="serviceTableBody">
+        {% for service in services %}
+        <tr class="border-b border-zinc-100 hover:bg-zinc-50 transition-colors service-row"
+            data-status="{{ service.status }}">
+
+          <!-- ID -->
+          <td class="px-5 py-3">
+            <span class="text-zinc-400 font-mono text-xs">#{{ service.pk }}</span>
+          </td>
+
+          <!-- Cliente -->
+          <td class="px-5 py-3">
+            <a href="{% url 'users:user_detail' service.client.pk %}"
+              class="flex items-center gap-2 group w-fit">
+              <div class="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                <i class="bi bi-person text-amber-600" style="font-size: 12px;"></i>
+              </div>
+              <span class="text-zinc-700 group-hover:text-amber-600 transition-colors service-client">
+                {{ service.client.username }}
+              </span>
+            </a>
+          </td>
+
+          <!-- Prestador -->
+          <td class="px-5 py-3">
+            {% if service.provider %}
+              <a href="{% url 'users:user_detail' service.provider.pk %}"
+                class="flex items-center gap-2 group w-fit">
+                <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                  <i class="bi bi-briefcase text-blue-600" style="font-size: 11px;"></i>
+                </div>
+                <span class="text-zinc-700 group-hover:text-blue-600 transition-colors">
+                  {{ service.provider.username }}
+                </span>
+              </a>
+            {% else %}
+              <span class="text-zinc-300 text-xs">Aguardando</span>
+            {% endif %}
+          </td>
+
+          <!-- Categoria -->
+          <td class="px-5 py-3">
+            {% if service.category %}
+              <span class="inline-flex items-center gap-1.5 bg-zinc-100 text-zinc-600 border border-zinc-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <i class="bi bi-tag" style="font-size: 10px;"></i>
+                {{ service.category.name }}
+              </span>
+            {% else %}
+              <span class="text-zinc-300 text-xs">—</span>
+            {% endif %}
+          </td>
+
+          <!-- Status -->
+          <td class="px-5 py-3">
+            {% if service.status == 'pending' %}
+              <span class="inline-flex items-center gap-1 bg-yellow-50 text-yellow-700 border border-yellow-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 inline-block"></span>
+                {{ service.get_status_display }}
+              </span>
+            {% elif service.status == 'accepted' %}
+              <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
+                {{ service.get_status_display }}
+              </span>
+            {% elif service.status == 'scheduled' %}
+              <span class="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 inline-block"></span>
+                {{ service.get_status_display }}
+              </span>
+            {% elif service.status == 'in_displacement' %}
+              <span class="inline-flex items-center gap-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-400 inline-block"></span>
+                {{ service.get_status_display }}
+              </span>
+            {% elif service.status == 'in_progress' %}
+              <span class="inline-flex items-center gap-1 bg-cyan-50 text-cyan-700 border border-cyan-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block"></span>
+                {{ service.get_status_display }}
+              </span>
+            {% elif service.status == 'completed' or service.status == 'rated' %}
+              <span class="inline-flex items-center gap-1 bg-green-50 text-green-700 border border-green-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"></span>
+                {{ service.get_status_display }}
+              </span>
+            {% elif service.status == 'rejected' or 'canceled' in service.status %}
+              <span class="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-400 inline-block"></span>
+                {{ service.get_status_display }}
+              </span>
+            {% endif %}
+          </td>
+
+          <!-- Valor -->
+          <td class="px-5 py-3">
+            {% if service.price %}
+              <span class="text-zinc-700 font-medium">R$ {{ service.price }}</span>
+            {% else %}
+              <span class="text-zinc-300 text-xs">—</span>
+            {% endif %}
+          </td>
+
+          <!-- Criado em -->
+          <td class="px-5 py-3 text-zinc-400 text-xs">
+            {{ service.created_at|date:"d/m/Y" }}<br>
+            <span class="text-zinc-300">{{ service.created_at|date:"H:i" }}</span>
+          </td>
+
+          {% if user.user_type == 'provider' %}
+            <!-- Ações de provider -->
+            <td class="px-5 py-3">
+              <div class="flex items-center justify-end gap-1">
+                <a href="{% url 'services:service_detail' service.pk %}"
+                  title="Ver detalhes"
+                  class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                  <i class="bi bi-eye" style="font-size: 15px;"></i>
+                </a>
+                <form action="{% url 'services:service_accept' service.pk %}" method="post" class="inline">
+                  {% csrf_token %}
+                  <button type="submit"
+                    class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                    <i class="bi bi-check"></i>
+                  </button>
+                </form>
+
+                <form action="{% url 'services:service_cancel' service.pk %}" method="post" class="inline">
+                  {% csrf_token %}
+                  <button type="submit"
+                    class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                    <i class="bi bi-x"></i>
+                  </button>
+                </form>
+
+              </div>
+            </td>
+          {% elif user.user_type == 'client' %}
+            <!-- Ações de cliente -->
+            <td class="px-5 py-3">
+              <div class="flex items-center justify-end gap-1">
+
+                {% if service.status == 'accepted' %}
+                  <form action="{% url 'services:service_cancel' service.pk %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit"
+                      class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </form>
+                {% endif %}
+
+                <a href="{% url 'services:service_detail' service.pk %}"
+                  title="Ver detalhes"
+                  class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                  <i class="bi bi-eye" style="font-size: 15px;"></i>
+                </a>
+
+                <a href="{% url 'services:service_update' service.pk %}"
+                  title="Editar serviço"
+                  class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                  <i class="bi bi-pencil" style="font-size: 15px;"></i>
+                </a>
+
+                <a href="{% url 'services:service_delete' service.pk %}"
+                  title="Excluir serviço"
+                  class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                  <i class="bi bi-trash" style="font-size: 15px;"></i>
+                </a>
+
+              </div>
+            </td>
+          {% endif %}
+
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" class="px-5 py-16 text-center">
+            <div class="flex flex-col items-center gap-3 text-zinc-400">
+              <i class="bi bi-briefcase text-5xl"></i>
+              <p class="text-sm">Nenhum serviço cadastrado.</p>
+              <a href="{% url 'services:service_create' %}"
+                class="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors">
+                Criar o primeiro serviço →
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<script>
+  // Busca por texto
+  document.getElementById('searchInput').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('.service-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query) ? '' : 'none';
+    });
+  });
+
+  // Filtro por status
+  function filterStatus(status) {
+    document.querySelectorAll('.service-row').forEach(row => {
+      if (!status) {
+        row.style.display = '';
+      } else if (status === 'canceled') {
+        row.style.display = row.dataset.status.includes('canceled') || row.dataset.status === 'rejected' ? '' : 'none';
+      } else {
+        row.style.display = row.dataset.status === status ? '' : 'none';
+      }
+    });
+  }
+</script>
+{% endblock %}

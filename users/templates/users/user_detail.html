@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }} — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-2">
+
+    <!-- Cabeçalho -->
+    <div class="mb-6" style="margin-left: 42%;">
+        <h1 class="text-2xl font-semibold text-zinc-800">Detalhes do usuário</h1>
+        <p class="text-sm text-zinc-400 mt-0.5">Informações completas do cadastro</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 max-w-3xl mx-auto">
+
+    <!-- Card principal -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+
+      <!-- Avatar e nome -->
+      <div class="px-6 py-5 border-b border-zinc-100 flex items-center gap-4">
+        <div class="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+          <i class="bi bi-person text-amber-600 text-3xl"></i>
+        </div>
+        <div>
+          <p class="text-lg font-semibold text-zinc-800">{{ user.username }}</p>
+          <p class="text-sm text-zinc-400">{{ user.email|default:"Sem email" }}</p>
+        </div>
+        <div class="ml-auto">
+          {% if user.user_type == 'provider' %}
+            <span class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 border border-blue-200 text-xs font-medium px-3 py-1.5 rounded-full">
+              <i class="bi bi-briefcase" style="font-size: 11px;"></i>
+              {{ user.get_user_type_display }}
+            </span>
+          {% else %}
+            <span class="inline-flex items-center gap-1.5 bg-zinc-100 text-zinc-600 border border-zinc-200 text-xs font-medium px-3 py-1.5 rounded-full">
+              <i class="bi bi-person" style="font-size: 11px;"></i>
+              {{ user.get_user_type_display }}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Estatísticas -->
+      <div class="grid grid-cols-3 divide-x divide-zinc-100">
+        <div class="px-6 py-4 flex flex-col gap-1">
+          <p class="text-xs text-zinc-400 uppercase tracking-wide font-medium">Avaliação média</p>
+          <div class="flex items-center gap-1.5">
+            <i class="bi bi-star-fill text-amber-400"></i>
+            <span class="text-xl font-semibold text-zinc-800">{{ user.average_rating|floatformat:1 }}</span>
+          </div>
+          <p class="text-xs text-zinc-400">{{ user.total_ratings }} avaliação{{ user.total_ratings|pluralize:"ões" }}</p>
+        </div>
+        <div class="px-6 py-4 flex flex-col gap-1">
+          <p class="text-xs text-zinc-400 uppercase tracking-wide font-medium">Cancelamentos</p>
+          <span class="text-xl font-semibold {% if user.cancellations_month > 3 %}text-red-500{% else %}text-zinc-800{% endif %}">
+            {{ user.cancellations_month }}
+          </span>
+          <p class="text-xs text-zinc-400">neste mês</p>
+        </div>
+        <div class="px-6 py-4 flex flex-col gap-1">
+          <p class="text-xs text-zinc-400 uppercase tracking-wide font-medium">Status</p>
+          {% if user.is_active %}
+            <span class="inline-flex items-center gap-1.5 text-green-600 font-medium text-sm mt-1">
+              <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span> Ativo
+            </span>
+          {% else %}
+            <span class="inline-flex items-center gap-1.5 text-red-500 font-medium text-sm mt-1">
+              <span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> Inativo
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Endereços -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
+        <i class="bi bi-geo-alt text-amber-500"></i>
+        <h2 class="font-semibold text-zinc-700 text-sm">Endereços</h2>
+        <a href="{% url 'users:user_address_create' user.pk%}"
+          class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          style="margin-left: 61%;">
+          <i class="bi bi-plus-lg"></i>
+          Novo endereço
+        </a>
+      </div>
+      <ul class="divide-y divide-zinc-100">
+        {% for address in user.addresses.all %}
+        <li class="px-6 py-4 flex items-start justify-between gap-4">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0 mt-0.5">
+              <i class="bi bi-house text-zinc-500" style="font-size: 13px;"></i>
+            </div>
+            <div>
+              <p class="text-sm text-zinc-700">
+                {{ address.street }}, {{ address.number }}
+                {% if address.complement %} — {{ address.complement }}{% endif %}
+              </p>
+              <p class="text-xs text-zinc-400 mt-0.5">
+                {{ address.neighborhood }}, {{ address.city }}/{{ address.state }} · CEP {{ address.zip_code }}
+              </p>
+            </div>
+            
+            <div class="flex items-center justify-end gap-1">
+
+              <a href="{% url 'users:user_address_update' user.pk address.pk %}"
+                title="Editar"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                <i class="bi bi-pencil" style="font-size: 14px;"></i>
+              </a>
+              <a href="{% url 'users:user_address_delete' user.pk address.pk %}"
+                title="Excluir"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                <i class="bi bi-trash" style="font-size: 14px;"></i>
+              </a>
+            </div>
+          </div>
+          {% if address.is_primary %}
+            <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-600 border border-amber-200 text-xs font-medium px-2 py-0.5 rounded-full shrink-0">
+              <i class="bi bi-star-fill" style="font-size: 9px;"></i> Principal
+            </span>
+          {% endif %}
+        </li>
+        {% empty %}
+        <div class="flex flex-col items-center gap-3 text-zinc-400" style="margin-top: 3%; margin-bottom: 5%;">
+          <i class="bi bi-geo-alt text-5xl"></i>
+          <p class="text-sm">Nenhum endereço cadastrado.</p>
+          <a href="{% url 'users:user_address_create' user.pk %}"
+            class="text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors">
+            Cadastrar o primeiro endereço →
+          </a>
+        </div>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Telefones -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
+        <i class="bi bi-telephone text-amber-500"></i>
+        <h2 class="font-semibold text-zinc-700 text-sm">Telefones</h2>
+        <a href="{% url 'users:user_telephone_create' user.pk%}"
+          class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          style="margin-left: 61%;">
+          <i class="bi bi-plus-lg"></i>
+          Novo telefone
+        </a>
+      </div>
+      <ul class="divide-y divide-zinc-100">
+        {% for tel in user.telephones.all %}
+        <li class="px-6 py-4 flex items-center justify-between">
+          <!-- Esquerda -->
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+                <i class="bi bi-phone text-zinc-500" style="font-size: 13px;"></i>
+              </div>
+
+              <span class="text-sm text-zinc-700">{{ tel.number }}</span>
+            </div>
+
+            <!-- Botões -->
+            <div class="flex items-center gap-1">
+              <a href="{% url 'users:user_telephone_update' user.pk tel.pk %}"
+                title="Editar"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                <i class="bi bi-pencil" style="font-size:14px;"></i>
+              </a>
+
+              <a href="{% url 'users:user_telephone_delete' user.pk tel.pk %}"
+                title="Excluir"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                <i class="bi bi-trash" style="font-size:14px;"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Direita -->
+          {% if tel.is_primary %}
+          <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-600 border border-amber-200 text-xs font-medium px-2 py-0.5 rounded-full">
+            <i class="bi bi-star-fill" style="font-size:9px;"></i>
+            Principal
+          </span>
+          {% endif %}
+</li>
+        {% empty %}
+        <li class="px-6 py-10 text-center text-zinc-400 text-sm">
+          <i class="bi bi-telephone text-3xl block mb-2"></i>
+          Nenhum telefone cadastrado.
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    
+    <!-- Botões -->
+    <div class="flex items-center gap-3" style="margin-left: 35%;">
+      <a href="{% url 'users:user_update' user.pk %}"
+        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+        <i class="bi bi-pencil"></i> Editar
+      </a>
+      <a href="{% url 'users:user_list' %}"
+        class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+        <i class="bi bi-arrow-left"></i> Voltar
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

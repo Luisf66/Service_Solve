@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Editar categoria{% else %}Nova categoria{% endif %} — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-2">
+
+  <!-- Cabeçalho -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-semibold text-zinc-800">
+      {% if object %}Editar categoria #{{ object.pk }}{% else %}Nova categoria{% endif %}
+    </h1>
+    <p class="text-sm text-zinc-400 mt-0.5">
+      {% if object %}Atualize os dados da categoria abaixo{% else %}Preencha os dados para criar uma nova categoria{% endif %}
+    </p>
+  </div>
+
+  <div class="max-w-2xl mx-auto flex flex-col gap-5">
+
+    <form method="post" class="flex flex-col gap-5">
+      {% csrf_token %}
+
+      <!-- Card: Informações principais -->
+      <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-100 flex items-center gap-2">
+          <i class="bi bi-briefcase text-amber-500"></i>
+          <h2 class="text-sm font-semibold text-zinc-700">Informações principais</h2>
+        </div>
+        <div class="px-6 py-5 flex flex-col gap-5">
+
+          <!-- Categoria -->
+            <div class="flex flex-col gap-1.5">
+                <label for="{{ form.name.id_for_label }}" class="text-sm font-medium text-zinc-600">
+                Nome <span class="text-amber-500">*</span>
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                <p class="text-xs text-red-500 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i> {{ form.name.errors|join:", " }}
+                </p>
+                {% endif %}
+            </div>
+
+          <!-- Descrição -->
+          <div class="flex flex-col gap-1.5">
+            <label for="{{ form.description.id_for_label }}" class="text-sm font-medium text-zinc-600">
+              Descrição <span class="text-amber-500">*</span>
+            </label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <p class="text-xs text-red-500 flex items-center gap-1">
+                <i class="bi bi-exclamation-circle"></i> {{ form.description.errors|join:", " }}
+              </p>
+            {% endif %}
+          </div>
+
+      <!-- Botões -->
+      <div class="flex items-center gap-3">
+        <button type="submit"
+          class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+          <i class="bi bi-check-lg"></i> Salvar
+        </button>
+        <a href="{% url 'services:category_list' %}"
+          class="flex items-center gap-2 border border-zinc-300 hover:bg-zinc-100 text-zinc-600 text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
+          <i class="bi bi-x-lg"></i> Cancelar
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<style>
+  input[type="text"], input[type="email"], input[type="number"],
+  input[type="datetime-local"], select, textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #d4d4d8;
+    border-radius: 0.5rem;
+    background: #fafafa;
+    color: #3f3f46;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.15);
+    background: #fff;
+  }
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+</style>
+{% endblock %}

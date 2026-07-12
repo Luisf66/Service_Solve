@@ -1,0 +1,78 @@
+{% extends 'base_auth.html' %}
+{% block title %}ServiceSolve - Perfil{% endblock %}
+{% block content %}
+
+<div class="min-h-screen flex items-center justify-center py-12 px-4">
+  <div class="w-full max-w-md">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
+        <i class="bi bi-tools text-white text-lg"></i>
+        </div>
+        <span class="text-zinc-800 font-medium text-2xl">
+        Service <span class="text-blue-500">Solve</span>
+        </span>
+    </div>
+
+    <div class="bg-zinc-900 border border-zinc-700 rounded-2xl p-8">
+
+      <div class="mb-6">
+        <p class="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-1">Conta</p>
+        <h4 class="text-white text-xl font-semibold m-0">Meu Perfil</h4>
+      </div>
+
+      <!-- aviso sobre a chave -->
+      <div class="bg-amber-900/20 border border-amber-700 rounded-lg px-4 py-3 mb-6">
+        <p class="text-amber-400 text-xs m-0">
+          <i class="bi bi-info-circle me-1"></i>
+          Para usar a análise de IA, gere sua chave gratuita em
+          <a href="https://console.groq.com/keys" target="_blank"
+             class="text-amber-300 hover:text-amber-200 underline">
+            console.groq.com/keys
+          </a>
+          e cole abaixo.
+        </p>
+      </div>
+
+      <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-4">
+          <label for="{{ field.id_for_label }}"
+                 class="block text-zinc-400 text-xs font-semibold uppercase tracking-wider mb-1.5">
+            {{ field.label }}
+          </label>
+          <input
+            type="{{ field.field.widget.input_type }}"
+            name="{{ field.html_name }}"
+            id="{{ field.id_for_label }}"
+            {% if field.value %}value="{{ field.value }}"{% endif %}
+            class="w-full bg-zinc-800 border border-zinc-600 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-amber-500 transition-colors"
+          >
+          {% if field.help_text %}
+          <p class="text-zinc-500 text-xs mt-1">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+          <p class="text-red-400 text-xs mt-1">{{ field.errors|join:", " }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        <div class="flex justify-between items-center mt-6">
+          <a href="{% url 'bitcoin:bitcoin-dashboard' %}"
+             class="text-sm text-zinc-400 hover:text-white transition-colors no-underline">
+            ← Dashboard
+          </a>
+          <button type="submit"
+                  class="bg-amber-500 hover:bg-amber-400 text-black font-semibold text-sm px-6 py-2.5 rounded-lg transition-colors">
+            Salvar
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

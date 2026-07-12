@@ -1,0 +1,115 @@
+<div class="w-56 shrink-0 min-h-screen flex flex-col border-r border-zinc-200 bg-white shadow-sm">
+
+  <!-- Toggle mobile -->
+  <button
+    class="block sm:hidden m-4 bg-zinc-200 text-zinc-700 rounded-lg px-3 py-2 self-start"
+    onclick="document.getElementById('menuCollapse').classList.toggle('hidden')">
+    <i class="bi bi-list text-xl"></i>
+  </button>
+
+  <div id="menuCollapse" class="hidden sm:flex flex-col flex-1 px-3 py-6 gap-6">
+
+    <!-- Geral -->
+    <div>
+      <p class="text-zinc-400 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Geral</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="#"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-grid" style="font-size: 15px;"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Usuários -->
+    <div>
+      <p class="text-zinc-400 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Usuários</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'users:user_list' %}"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-people" style="font-size: 15px;"></i>
+            <span>Todos os usuários</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'users:user_create' %}"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-person-plus" style="font-size: 15px;"></i>
+            <span>Novo usuário</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Serviços -->
+    <div>
+      <p class="text-zinc-400 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Serviços</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="{% url 'services:service_list' %}"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-briefcase" style="font-size: 15px;"></i>
+            <span>Todos os serviços</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'services:service_create' %}"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-plus-circle" style="font-size: 15px;"></i>
+            <span>Novo serviço</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Categorias -->
+    <div>
+      <p class="text-zinc-400 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Categorias de Serviços</p>
+      <ul class="flex flex-col gap-0.5">
+
+        <li>
+          <a href="{% url 'services:category_list' %}"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-briefcase" style="font-size: 15px;"></i>
+            <span>Todas as categorias</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="{% url 'services:category_create' %}"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-plus-circle" style="font-size: 15px;"></i>
+            <span>Nova categoria</span>
+          </a>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- Histórico -->
+    <div>
+      <p class="text-zinc-400 text-xs font-semibold uppercase tracking-widest px-3 mb-1">Histórico</p>
+      <ul class="flex flex-col gap-0.5">
+        <li>
+          <a href="#"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-clock-history" style="font-size: 15px;"></i>
+            <span>Histórico geral</span>
+          </a>
+        </li>
+        <li>
+          <a href="#"
+            class="flex items-center gap-3 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 px-3 py-2.5 rounded-lg no-underline transition-colors text-sm">
+            <i class="bi bi-star" style="font-size: 15px;"></i>
+            <span>Avaliações</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+<!-- ↑ esse fechamento é crítico — sem ele o content cai dentro da sidebar -->

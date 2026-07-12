@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Usuários — Service Solve{% endblock %}
+
+{% block content %}
+<div class="px-6 py-2">
+
+  <!-- Cabeçalho -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-semibold text-zinc-800">Usuários</h1>
+      <p class="text-sm text-zinc-400 mt-0.5">Gerencie todos os usuários do sistema</p>
+    </div>
+    <a href="{% url 'users:user_create' %}"
+      class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+      <i class="bi bi-person-plus"></i>
+      Novo usuário
+    </a>
+  </div>
+
+  <!-- Card da tabela -->
+  <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+
+    <!-- Barra de busca -->
+    <div class="px-5 py-4 border-b border-zinc-100 flex items-center gap-3">
+      <div class="relative flex-1 max-w-sm">
+        <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar usuário..."
+          class="w-full pl-9 pr-4 py-2 text-sm bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent">
+      </div>
+      <span class="text-xs text-zinc-400">{{ users|length }} usuário{{ users|length|pluralize:"s" }}</span>
+    </div>
+
+    <!-- Tabela -->
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-zinc-50 border-b border-zinc-200 text-zinc-500 text-xs uppercase tracking-wide">
+          <th class="text-left px-5 py-3 font-medium">Usuário</th>
+          <th class="text-left px-5 py-3 font-medium">Email</th>
+          <th class="text-left px-5 py-3 font-medium">Tipo</th>
+          <th class="text-left px-5 py-3 font-medium">Avaliação</th>
+          <th class="text-left px-5 py-3 font-medium">Cancelamentos Disponíveis</th>
+          <th class="text-right px-5 py-3 font-medium">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        {% for user in users %}
+        <tr class="border-b border-zinc-100 hover:bg-zinc-50 transition-colors user-row">
+
+          <!-- Usuário -->
+          <td class="px-5 py-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                <i class="bi bi-person text-amber-600" style="font-size: 14px;"></i>
+              </div>
+              <span class="font-medium text-zinc-800 user-name">{{ user.username }}</span>
+            </div>
+          </td>
+
+          <!-- Email -->
+          <td class="px-5 py-3 text-zinc-500">{{ user.email|default:"—" }}</td>
+
+          <!-- Tipo -->
+          <td class="px-5 py-3">
+            {% if user.user_type == 'provider' %}
+              <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-600 border border-blue-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <i class="bi bi-briefcase" style="font-size: 11px;"></i>
+                {{ user.get_user_type_display }}
+              </span>
+            {% else %}
+              <span class="inline-flex items-center gap-1 bg-zinc-100 text-zinc-600 border border-zinc-200 text-xs font-medium px-2.5 py-1 rounded-full">
+                <i class="bi bi-person" style="font-size: 11px;"></i>
+                {{ user.get_user_type_display }}
+              </span>
+            {% endif %}
+          </td>
+
+          <!-- Avaliação -->
+          <td class="px-5 py-3">
+            <div class="flex items-center gap-1.5">
+              <i class="bi bi-star-fill text-amber-400" style="font-size: 12px;"></i>
+              <span class="text-zinc-700 font-medium">{{ user.average_rating|floatformat:1 }}</span>
+              <span class="text-zinc-400 text-xs">({{ user.total_ratings }})</span>
+            </div>
+          </td>
+
+          <!-- Cancelamentos Disponíveis -->
+          <td class="px-5 py-3">
+            {% if user.cancellation_limit > 0 %}
+              <span class="text-zinc-700 font-medium">{{ user.cancellation_limit }}</span>
+            {% else %}
+              <span class="text-red-600 font-medium">0</span>
+            {% endif %}
+          </td>
+
+          <!-- Ações -->
+          <td class="px-5 py-3">
+            <div class="flex items-center justify-end gap-1">
+              <a href="{% url 'users:user_detail' user.pk %}"
+                title="Ver detalhes"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                <i class="bi bi-eye" style="font-size: 15px;"></i>
+              </a>
+              <a href="{% url 'users:user_update' user.pk %}"
+                title="Editar"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors">
+                <i class="bi bi-pencil" style="font-size: 14px;"></i>
+              </a>
+              <a href="{% url 'users:user_delete' user.pk %}"
+                title="Excluir"
+                class="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                <i class="bi bi-trash" style="font-size: 14px;"></i>
+              </a>
+            </div>
+          </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="px-5 py-16 text-center">
+            <div class="flex flex-col items-center gap-3 text-zinc-400">
+              <i class="bi bi-people text-5xl"></i>
+              <p class="text-sm">Nenhum usuário cadastrado.</p>
+              <a href="{% url 'users:user_create' %}"
+                class="text-amber-500 hover:text-amber-600 text-sm font-medium transition-colors">
+                Criar o primeiro usuário →
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<script>
+  document.getElementById('searchInput').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('.user-row').forEach(row => {
+      const name = row.querySelector('.user-name').textContent.toLowerCase();
+      row.style.display = name.includes(query) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}
