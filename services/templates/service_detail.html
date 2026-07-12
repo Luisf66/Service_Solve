@@ -280,6 +280,11 @@
     <!-- Painel de ações lateral -->
     <div class="flex flex-col gap-2 sticky top-6" style="width: 160px;">
 
+      <a href="{% url 'chat:chat_detail' service.pk %}"
+        class="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+        <i class="bi bi-chat"></i> Chat
+      </a>
+
       {% if user.user_type == 'client' %}
         <a href="{% url 'services:service_update' service.pk %}"
           class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
