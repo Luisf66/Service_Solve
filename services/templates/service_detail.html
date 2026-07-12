@@ -305,14 +305,12 @@
         </form>
 
         {% with reviews=service.reviews.all %}
-          {% if not reviews %}
             <form action="{% url 'reviews:review_create' service.pk %}" method="get">
               <button type="submit"
               class="w-full flex items-center gap-2 border border-yellow-300 hover:bg-yellow-50 text-yellow-600 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
               <i class="bi bi-star"></i> Avaliar
               </button>
             </form>
-          {% endif %}
         {% endwith %}
 
       {% elif user.user_type == 'provider' %}
