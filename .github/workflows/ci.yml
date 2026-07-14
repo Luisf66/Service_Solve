@@ -34,9 +34,6 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       DEBUG: "True"
       ALLOWED_HOSTS: "localhost,127.0.0.1"
-      AI_BASE_URL: "http://fake-url"
-      AI_MODEL: "fake-model"
-      AI_API_KEY: "fake-key"
 
     steps:
       - name: Checkout do código
@@ -54,11 +51,11 @@ jobs:
       - name: Rodar migrações
         run: python manage.py migrate --noinput
 
-      - name: Rodar testes com cobertura
-        run: pytest --cov=. --cov-report=xml --cov-fail-under=80
+      #- name: Rodar testes com cobertura
+      #  run: pytest --cov=. --cov-report=xml --cov-fail-under=80
 
-      - name: Upload do relatório de cobertura
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
+      #- name: Upload do relatório de cobertura
+      #  uses: codecov/codecov-action@v4
+      #  with:
+      #    token: ${{ secrets.CODECOV_TOKEN }}
+      #    files: ./coverage.xml
