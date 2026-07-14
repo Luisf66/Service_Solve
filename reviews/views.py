@@ -1,4 +1,7 @@
+from django.db.models import Avg
 from django.shortcuts import render, redirect, get_object_or_404
+
+from reviews.models import Review
 from reviews.forms.review_form import ReviewForm
 from services.models import Service, ServiceStatusHistory
 # Create your views here.
@@ -15,16 +18,27 @@ def service_review(request, service_pk):
         form = ReviewForm(request.POST)
 
         if form.is_valid():
+            # obtem os dados para o form e salva no DB
             rating = form.save(commit=False)
             rating.service = service
             rating.reviewer = request.user
-            rating.reviewee = service.provider
+            rating.reviewee = service.provider if request.user == service.client else service.client
 
             rating.save()
-
+            # Atualiza o serviço para avaliado e salva no DB
             service.status = 'rated'
+
             service.save()
 
+            # Aumenta o número de avaliações do avaliado e salva no DB
+            reviewee = rating.reviewee
+            reviewee.total_ratings += 1
+            avg = Review.objects.filter(reviewee=reviewee).aggregate(Avg('rating'))['rating__avg']
+            reviewee.average_rating = round(avg, 2)
+
+            reviewee.save()
+
+            # Cria o historico de serviço
             ServiceStatusHistory.objects.create(
                 service=service,
                 previous_status='completed',
