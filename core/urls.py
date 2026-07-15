@@ -16,16 +16,28 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 from django.contrib.auth import views as auth_views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='login/', permanent=False)),
 
     path('login/', auth_views.LoginView.as_view(template_name='auth/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+]
 
+urlpatterns += [
     path('chat/', include('chat.urls')),  # Include the chat app URLs
     path('reviews/', include('reviews.urls')),  # Include the reviews app URLs
     path('services/', include('services.urls')),  # Include the services app URLs
     path('users/', include('users.urls')),  # Include the users app URLs
+]
+
+urlpatterns += [
+    path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 ]
