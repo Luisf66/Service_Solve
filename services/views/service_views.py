@@ -1,6 +1,7 @@
+from users.models import User
 from services.models import Service, ServiceStatusHistory
 from services.forms.service_form import ServiceForm, PaymentProviderForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -90,22 +91,56 @@ def service_accept(request, pk):
     return render(request, 'service_detail.html', {'service': service})
 
 def service_cancel(request, pk):
-    service = Service.objects.get(pk=pk)
+    service = get_object_or_404(Service, pk=pk)
+    user = request.user
 
-    if request.method == 'POST' and service.status == 'accepted' or service.status == 'scheduled' and service.provider == request.user:
+    if request.method != 'POST':
+        return redirect('services:service_detail', pk=pk)
+
+    if user.cancellations_month <= 0:
+        # sem cancelamentos disponíveis
+        return redirect('services:service_detail', pk=pk)
+
+    status_cancelavel = service.status in ['accepted', 'scheduled']
+
+    if not status_cancelavel:
+        return redirect('services:service_detail', pk=pk)
+
+    if user == service.provider:
+        previous_status = service.status
         service.status = 'canceled_by_provider'
         service.save()
-        # Criar histórico de status
-        ServiceStatusHistory.objects.create(service=service, previous_status='accepted', new_status='canceled_by_provider', changed_by=request.user)
-        return redirect('services:service_detail', pk=pk)
-    
-    if request.method == 'POST' and service.status == 'accepted' or service.status == 'scheduled' and service.client == request.user:
+
+        ServiceStatusHistory.objects.create(
+            service=service,
+            previous_status=previous_status,
+            new_status='canceled_by_provider',
+            changed_by=user
+        )
+
+        user.cancellations_month -= 1
+        user.save()
+
+    elif user == service.client:
+        previous_status = service.status
         service.status = 'canceled_by_client'
         service.save()
-        # Criar histórico de status
-        ServiceStatusHistory.objects.create(service=service, previous_status='accepted', new_status='canceled_by_client', changed_by=request.user)
+
+        ServiceStatusHistory.objects.create(
+            service=service,
+            previous_status=previous_status,
+            new_status='canceled_by_client',
+            changed_by=user
+        )
+
+        user.cancellations_month -= 1
+        user.save()
+
+    else:
+        # usuário não é parte do serviço
         return redirect('services:service_detail', pk=pk)
-    return render(request, 'service_detail.html', {'service': service})
+
+    return redirect('services:service_detail', pk=pk)
 
 def service_complete(request, pk):
     service = Service.objects.get(pk=pk)

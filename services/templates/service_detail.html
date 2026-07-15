@@ -286,15 +286,22 @@
       </a>
 
       {% if user.user_type == 'client' %}
-        <a href="{% url 'services:service_update' service.pk %}"
-          class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
-          <i class="bi bi-pencil"></i> Editar
-        </a>
+        {% if service.status == 'pending' %}
+          <a href="{% url 'services:service_update' service.pk %}"
+            class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+            <i class="bi bi-pencil"></i> Editar
+          </a>
+        {% endif %}
 
-        <a href="{% url 'services:service_delete' service.pk %}"
-          class="flex items-center gap-2 border border-red-300 hover:bg-red-50 text-red-500 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
-          <i class="bi bi-trash"></i> Excluir
-        </a>
+        {% if service.status != 'rated' %}
+          <form action="{% url 'services:service_cancel' service.pk %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit"
+              class="w-full flex items-center gap-2 border border-red-300 hover:bg-red-50 text-red-600 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+              <i class="bi bi-x"></i> Cancelar
+            </button>
+          </form>
+        {% endif %}
 
         <form action="{% url 'services:service_complete' service.pk %}" method="post">
           {% csrf_token %}
