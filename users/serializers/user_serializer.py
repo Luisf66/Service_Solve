@@ -22,3 +22,14 @@ class UserSerializer(serializers.ModelSerializer):
             'addresses',
             'telephones'
         ]
+
+class UserServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'username',
+            'user_type'
+        ]
