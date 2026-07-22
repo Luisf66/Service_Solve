@@ -1,0 +1,27 @@
+services:
+
+    service_solve:
+      build: .
+      restart: always
+      ports:
+        - 8000:8000
+      depends_on:
+        - service_solve_db  
+      env_file:
+        - .env
+      volumes:
+        - .:/app_container # igual ao dockerfile
+      
+    service_solve_db: 
+      image: postgres:15
+      ports:
+        - 15432:5432
+      volumes:
+        - service_solve_postgres_data:/var/lib/postgresql/data/ 
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=service_solve 
+
+volumes:
+  service_solve_postgres_data: 

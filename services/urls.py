@@ -1,5 +1,6 @@
 from django.urls import path
 from services.views import service_views, category_views
+from services.views.api import service_api_views
 
 
 app_name = 'services'
@@ -27,4 +28,9 @@ urlpatterns = [
 #
     #path('providers/', ..., name='provider-list'),             # Listar Prestadores de Serviço
     #path('categories/', ..., name='category-list'),            # Listar Categorias de Serviço
+]
+
+urlpatterns += [
+    path('api/v1/services/', service_api_views.ServiceListView.as_view(), name='service_api_list'),
+    path('api/v1/services/<int:pk>/', service_api_views.ServiceDetailView.as_view(), name='service_api_detail'),
 ]

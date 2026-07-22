@@ -13,7 +13,10 @@ class User(AbstractUser):
     user_type = models.CharField(max_length=10, choices=USER_TYPES, default='client', help_text="Tipo de usuário")
     average_rating = models.FloatField(default=0, help_text="Avaliação média do usuário")
     total_ratings = models.IntegerField(default=0, help_text="Número total de avaliações do usuário")
-    cancellations_month = models.IntegerField(default=0, help_text="Número de cancelamentos do usuário no mês")
+    cancellations_month = models.IntegerField(default=3, help_text="Número de cancelamentos do usuário no mês")
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
         return f'{self.username} - {self.user_type}'
